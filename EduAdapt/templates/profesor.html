@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="display-5 text-primary"><i class="fas fa-chalkboard-teacher"></i> Panel del Profesor</h2>
+        <p class="lead text-muted">Estadísticas y resultados de todos los estudiantes.</p>
+        <hr>
+    </div>
+</div>
+
+<!-- Tarjetas de Estadísticas Generales -->
+<div class="row text-center mb-5">
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body py-4">
+                <h5 class="card-title text-muted">Evaluaciones Realizadas</h5>
+                <h2 class="display-4 text-primary">{{ stats.total_evaluaciones }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body py-4">
+                <h5 class="card-title text-muted">Promedio Global</h5>
+                <h2 class="display-4 {% if stats.promedio_global >= 80 %}text-success{% elif stats.promedio_global >= 60 %}text-warning{% else %}text-danger{% endif %}">
+                    {{ stats.promedio_global }}%
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h4><i class="fas fa-chart-pie"></i> Rendimiento por Materia</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped mt-3 text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Materia</th>
+                        <th>Evaluaciones Realizadas</th>
+                        <th>Promedio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mat_stat in stats.materias_stats %}
+                    <tr>
+                        <td>{{ mat_stat[0] }}</td>
+                        <td>{{ mat_stat[1] }}</td>
+                        <td>
+                            <span class="badge {% if mat_stat[2] >= 80 %}bg-success{% elif mat_stat[2] >= 60 %}bg-warning text-dark{% else %}bg-danger{% endif %} fs-6">
+                                {{ "%.1f"|format(mat_stat[2] or 0) }}%
+                            </span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3">Aún no hay datos.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4><i class="fas fa-list-alt"></i> Resultados Recientes de Estudiantes</h4>
+        <div class="table-responsive">
+            <table class="table table-hover mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Curso</th>
+                        <th>Materia</th>
+                        <th>Porcentaje</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in resultados %}
+                    <tr>
+                        <td><strong>{{ res[0] }}</strong></td>
+                        <td>{{ res[1] }}</td>
+                        <td>{{ res[2] }}</td>
+                        <td>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar {% if res[3] >= 80 %}bg-success{% elif res[3] >= 60 %}bg-warning text-dark{% else %}bg-danger{% endif %}" 
+                                     role="progressbar" 
+                                     style="width: {{ res[3] }}%;" 
+                                     aria-valuenow="{{ res[3] }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ res[3]|round(1) }}%
+                                </div>
+                            </div>
+                        </td>
+                        <td><small class="text-muted">{{ res[4] }}</small></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No hay diagnósticos registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+</div>
+{% endblock %}

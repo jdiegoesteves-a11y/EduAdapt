@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="quiz-container">
+    <div class="progress-info">
+        <span>Pregunta {{ indice }} de {{ total }}</span>
+        <span>{{ "%.0f"|format(progreso) }}%</span>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" style="width: {{ progreso }}%;"></div>
+    </div>
+    
+    <div class="card mt-4">
+        <h3 class="question-text">{{ pregunta.pregunta }}</h3>
+        
+        <form method="POST" action="{{ url_for('quiz_view') }}" class="options-form">
+            {% for i in range(4) %}
+                <label class="option-label">
+                    <input type="radio" name="respuesta" value="{{ i }}" required>
+                    <span class="option-custom"></span>
+                    {{ pregunta.opciones[i] }}
+                </label>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-primary btn-block mt-4">Siguiente</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

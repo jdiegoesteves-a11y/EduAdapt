@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-4">
+    <h2 class="title">Modo Práctica</h2>
+    <p class="subtitle">Selecciona una materia y un tema para repasar</p>
+</div>
+
+<div class="card p-4 mx-auto" style="max-width: 600px;">
+    <div class="form-group">
+        <label>Materia:</label>
+        <select id="materiaSelect" class="form-control" onchange="loadTemas()">
+            <option value="">Seleccione...</option>
+            {% for materia in materias %}
+            <option value="{{ materia }}">{{ materia }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="form-group mt-3">
+        <label>Tema:</label>
+        <select id="temaSelect" class="form-control" disabled>
+            <option value="">Seleccione una materia primero...</option>
+        </select>
+    </div>
+    
+    <button id="btnEmpezar" class="btn btn-primary btn-block mt-4" onclick="startPractica()" disabled>Empezar Práctica</button>
+</div>
+
+<!-- Contenedor del Quiz Práctico -->
+<div id="practicaContainer" class="mt-4" style="display: none;">
+    <div class="card">
+        <h4 id="practicaTema" class="text-muted"></h4>
+        <h3 id="practicaPregunta" class="question-text mt-2"></h3>
+        
+        <div id="practicaOpciones" class="mt-4">
+            <!-- Opciones generadas por JS -->
+        </div>
+        
+        <div id="practicaFeedback" class="mt-4 text-center" style="display: none;">
+            <h3 id="feedbackTitle"></h3>
+            <p id="feedbackExplicacion" class="text-muted mt-2"></p>
+            <button id="btnSiguiente" class="btn btn-primary mt-3" onclick="nextPractica()">Siguiente</button>
+        </div>
+        
+        <button id="btnVerificar" class="btn btn-success btn-block mt-4" onclick="verificarRespuesta()">Verificar Respuesta</button>
+    </div>
+</div>
+
+<script>
+let preguntasPractica = [];
+let indicePractica = 0;
+let aciertosPractica = 0;
+let seleccionActual = null;
+
+async function loadTemas() {
+    const materia = document.getElementById('materiaSelect').value;
+    const temaSelect = document.getElementById('temaSelect');
+    const btnEmpezar = document.getElementById('btnEmpezar');
+    
+    if (!materia) {
+        temaSelect.innerHTML = '<option value="">Seleccione una materia primero...</option>';
+        temaSelect.disabled = true;
+        btnEmpezar.disabled = true;
+        return;
+    }
+    
+    const res = await fetch(`/api/temas/${materia}`);
+    const temas = await res.json();
+    
+    temaSelect.innerHTML = '<option value="">Seleccione...</option>';
+    temas.forEach(t => {
+        temaSelect.innerHTML += `<option value="${t}">${t}</option>`;
+    });
+    
+    temaSelect.disabled = false;
+    temaSelect.onchange = () => {
+        btnEmpezar.disabled = !temaSelect.value;
+    };
+}
+
+async function startPractica() {
+    const materia = document.getElementById('materiaSelect').value;
+    const tema = document.getElementById('temaSelect').value;
+    
+    const res = await fetch(`/api/practicar/${materia}/${tema}`);
+    preguntasPractica = await res.json();
+    
+    if (preguntasPractica.length === 0) {
+        alert("No hay preguntas para este tema.");
+        return;
+    }
+    
+    indicePractica = 0;
+    aciertosPractica = 0;
+    document.getElementById('practicaContainer').style.display = 'block';
+    showPreguntaPractica();
+}
+
+function showPreguntaPractica() {
+    const pregunta = preguntasPractica[indicePractica];
+    document.getElementById('practicaTema').innerText = `Práctica: ${pregunta.tema} (${indicePractica + 1}/${preguntasPractica.length})`;
+    document.getElementById('practicaPregunta').innerText = pregunta.pregunta;
+    
+    const divOpciones = document.getElementById('practicaOpciones');
+    divOpciones.innerHTML = '';
+    
+    pregunta.opciones.forEach((opc, i) => {
+        divOpciones.innerHTML += `
+            <label class="option-label">
+                <input type="radio" name="practica_resp" value="${i}" onclick="seleccionActual = ${i}">
+                <span class="option-custom"></span>
+                ${opc}
+            </label>
+        `;
+    });
+    
+    seleccionActual = null;
+    document.getElementById('practicaFeedback').style.display = 'none';
+    document.getElementById('btnVerificar').style.display = 'block';
+}
+
+function verificarRespuesta() {
+    if (seleccionActual === null) {
+        alert("Selecciona una opción");
+        return;
+    }
+    
+    const pregunta = preguntasPractica[indicePractica];
+    const fbTitle = document.getElementById('feedbackTitle');
+    
+    if (seleccionActual === pregunta.respuesta) {
+        fbTitle.innerText = "¡Correcto!";
+        fbTitle.style.color = "#27ae60";
+        aciertosPractica++;
+    } else {
+        fbTitle.innerText = `Incorrecto. La respuesta era: ${pregunta.opciones[pregunta.respuesta]}`;
+        fbTitle.style.color = "#c0392b";
+    }
+    
+    document.getElementById('feedbackExplicacion').innerText = pregunta.explicacion;
+    document.getElementById('practicaFeedback').style.display = 'block';
+    document.getElementById('btnVerificar').style.display = 'none';
+    
+    if (indicePractica === preguntasPractica.length - 1) {
+        document.getElementById('btnSiguiente').innerText = "Terminar Práctica";
+    }
+}
+
+function nextPractica() {
+    indicePractica++;
+    if (indicePractica < preguntasPractica.length) {
+        showPreguntaPractica();
+    } else {
+        const porc = (aciertosPractica / preguntasPractica.length) * 100;
+        alert(`¡Práctica finalizada!\nAciertos: ${aciertosPractica}/${preguntasPractica.length} (${porc}%)`);
+        document.getElementById('practicaContainer').style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

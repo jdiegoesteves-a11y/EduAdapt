@@ -1,0 +1,19 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Base de datos SQLite (se genera localmente al iniciar la app)
+*.db
+*.sqlite3
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Archivos del sistema operativo e IDEs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

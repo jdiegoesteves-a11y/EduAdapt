@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center">
+    <h2 class="title">Resultados de {{ materia }}</h2>
+    
+    <div class="score-card card mt-4">
+        <div class="score-circle">
+            <h2>{{ "%.1f"|format(porcentaje) }}%</h2>
+        </div>
+        <div class="score-details mt-4">
+            <p><strong>Correctas:</strong> {{ correctas }}</p>
+            <p><strong>Incorrectas:</strong> {{ incorrectas }}</p>
+        </div>
+    </div>
+    
+    <h3 class="mt-4 mb-4">Rendimiento por Tema</h3>
+    <div class="topics-grid">
+        {% for tema, rend, clasif in prioridades %}
+        <div class="topic-item card {{ 'refuerzo' if clasif == 'NECESITA REFUERZO' else 'progreso' if clasif == 'EN PROGRESO' else 'dominado' }}">
+            <h4>{{ tema }}</h4>
+            <div class="topic-stats">
+                <span>{{ "%.1f"|format(rend) }}%</span>
+                <span class="badge">{{ clasif }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if preguntas_refuerzo %}
+    <h3 class="mt-5 mb-4 text-warning"><i class="fas fa-exclamation-triangle"></i> Preguntas de Refuerzo Recomendadas</h3>
+    <p class="text-muted">Como tuviste dificultades en algunos temas, te recomendamos revisar estas preguntas y sus explicaciones:</p>
+    <div class="row text-start mt-4">
+        {% for p in preguntas_refuerzo %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <strong>Tema:</strong> {{ p.tema }}
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Pregunta:</strong> {{ p.pregunta }}</p>
+                    <ul class="list-group list-group-flush mb-3">
+                        {% for opcion in p.opciones %}
+                            <li class="list-group-item {% if loop.index0 == p.respuesta %}list-group-item-success fw-bold{% endif %}">
+                                {{ opcion }} 
+                                {% if loop.index0 == p.respuesta %}<i class="fas fa-check float-end"></i>{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="alert alert-info py-2 mb-0">
+                        <strong>Explicación:</strong> {{ p.explicacion }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="mt-4 action-buttons">
+        <a href="{{ url_for('plan') }}" class="btn btn-primary">Ver Plan Personalizado</a>
+        <a href="{{ url_for('menu') }}" class="btn btn-outline">Volver al Menú</a>
+    </div>
+</div>
+{% endblock %}

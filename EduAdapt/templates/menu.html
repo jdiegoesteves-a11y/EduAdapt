@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center">
+    <h2 class="title mb-4">¡Hola, {{ nombre }}!</h2>
+    <div class="menu-grid">
+        <a href="{{ url_for('seleccion') }}" class="card menu-card">
+            <h3>Realizar Diagnóstico</h3>
+            <p>Evalúa tus conocimientos e identifica tus debilidades.</p>
+        </a>
+        <a href="{{ url_for('practica') }}" class="card menu-card">
+            <h3>Modo Práctica</h3>
+            <p>Resuelve ejercicios de temas específicos sin presión.</p>
+        </a>
+        <a href="{{ url_for('progreso') }}" class="card menu-card">
+            <h3>Mi Progreso</h3>
+            <p>Revisa tus estadísticas y evolución.</p>
+        </a>
+    </div>
+</div>
+{% endblock %}

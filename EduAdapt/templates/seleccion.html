@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center">
+    <h2 class="title">Selecciona una Materia</h2>
+    <p class="subtitle mb-4">Elige la materia para tu examen diagnóstico</p>
+    
+    <div class="subjects-list">
+        {% for materia in materias %}
+            <a href="{{ url_for('iniciar_diagnostico', materia=materia) }}" class="btn btn-secondary btn-large">{{ materia }}</a>
+        {% endfor %}
+    </div>
+    <div class="mt-4">
+        <a href="{{ url_for('menu') }}" class="btn btn-outline">Volver</a>
+    </div>
+</div>
+{% endblock %}

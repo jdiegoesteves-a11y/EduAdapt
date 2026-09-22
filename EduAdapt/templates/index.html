@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero-section text-center">
+    <h1 class="title">Bienvenido a <span class="highlight">EduAdapt</span></h1>
+    <p class="subtitle">Aprende según lo que necesitas. Tu tutor adaptativo.</p>
+    
+    <div class="card login-card">
+        <form method="POST">
+            <div class="form-group">
+                <label>Nombre del Estudiante:</label>
+                <input type="text" name="nombre" class="form-control" required placeholder="Ej. Juan Pérez">
+            </div>
+            <div class="form-group">
+                <label>Curso:</label>
+                <select name="curso" class="form-control" required>
+                    <option value="1er Año">1er Año</option>
+                    <option value="2do Año">2do Año</option>
+                    <option value="3er Año">3er Año</option>
+                    <option value="4to Año">4to Año</option>
+                    <option value="5to Año">5to Año</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Comenzar</button>
+        </form>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('profesor') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-user-tie"></i> Acceso Profesores</a>
+    </div>
+</div>
+{% endblock %}

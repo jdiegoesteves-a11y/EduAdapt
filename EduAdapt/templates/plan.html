@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-4">
+    <h2 class="title">Tu Plan Personalizado</h2>
+    <p class="subtitle">Prioridades de estudio generadas por el algoritmo adaptativo</p>
+</div>
+
+<div class="plan-list">
+    {% for tema, rend, clasif in prioridades %}
+    <div class="card plan-card mb-4">
+        <div class="plan-header">
+            <h3>Prioridad {{ loop.index }}: {{ tema }}</h3>
+            <span class="badge {{ 'badge-danger' if clasif == 'NECESITA REFUERZO' else 'badge-warning' if clasif == 'EN PROGRESO' else 'badge-success' }}">{{ "%.1f"|format(rend) }}%</span>
+        </div>
+        <div class="plan-body mt-2">
+            {% if clasif == 'NECESITA REFUERZO' %}
+                <p><strong>Recomendación:</strong> Repasa la teoría y realiza 5 ejercicios de práctica enfocados.</p>
+            {% elif clasif == 'EN PROGRESO' %}
+                <p><strong>Recomendación:</strong> Entiendes las bases, realiza 3 ejercicios para afianzar conceptos.</p>
+            {% else %}
+                <p><strong>Estado:</strong> Contenido dominado. Mantén la práctica ocasional.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="text-center mt-4">
+    <a href="{{ url_for('menu') }}" class="btn btn-outline">Volver al Menú</a>
+</div>
+{% endblock %}

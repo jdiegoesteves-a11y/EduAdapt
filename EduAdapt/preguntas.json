@@ -1,0 +1,49 @@
+[
+    {"materia": "Matemáticas", "tema": "Ecuaciones", "pregunta": "Resuelve x + 5 = 12", "opciones": ["5", "7", "12", "17"], "respuesta": 1, "explicacion": "Restando 5 a ambos lados, x = 7."},
+    {"materia": "Matemáticas", "tema": "Ecuaciones", "pregunta": "Si 2x = 10, ¿cuánto vale x?", "opciones": ["2", "5", "10", "20"], "respuesta": 1, "explicacion": "Dividiendo por 2, x = 5."},
+    {"materia": "Matemáticas", "tema": "Ecuaciones", "pregunta": "Resuelve 3x - 4 = 11", "opciones": ["3", "5", "7", "15"], "respuesta": 1, "explicacion": "Sumando 4 y dividiendo por 3, x = 5."},
+    
+    {"materia": "Matemáticas", "tema": "Funciones", "pregunta": "¿Cuál es el dominio de f(x) = 1/x?", "opciones": ["Todo R", "R excepto 0", "R positivo", "R negativo"], "respuesta": 1, "explicacion": "No se puede dividir por cero."},
+    {"materia": "Matemáticas", "tema": "Funciones", "pregunta": "Si f(x) = 2x + 1, calcula f(3)", "opciones": ["5", "6", "7", "8"], "respuesta": 2, "explicacion": "f(3) = 2(3) + 1 = 7."},
+    {"materia": "Matemáticas", "tema": "Funciones", "pregunta": "La gráfica de f(x) = x^2 es una:", "opciones": ["Línea recta", "Parábola", "Hipérbola", "Circunferencia"], "respuesta": 1, "explicacion": "Las funciones cuadráticas forman parábolas."},
+    
+    {"materia": "Matemáticas", "tema": "Factorización", "pregunta": "Factoriza x^2 - y^2", "opciones": ["(x-y)^2", "(x+y)(x-y)", "(x+y)^2", "x(x-y)"], "respuesta": 1, "explicacion": "Es una diferencia de cuadrados."},
+    {"materia": "Matemáticas", "tema": "Factorización", "pregunta": "Factor común en 4x + 8", "opciones": ["x", "2", "4", "8"], "respuesta": 2, "explicacion": "4 divide a 4x y a 8."},
+    {"materia": "Matemáticas", "tema": "Factorización", "pregunta": "Trinomio cuadrado perfecto: x^2 + 2x + 1", "opciones": ["(x+1)^2", "(x+2)^2", "(x-1)^2", "(x+1)(x-1)"], "respuesta": 0, "explicacion": "(x+1)(x+1) = x^2 + 2x + 1."},
+    
+    {"materia": "Física", "tema": "Movimiento", "pregunta": "¿Qué es la velocidad?", "opciones": ["Distancia por tiempo", "Masa por aceleración", "Fuerza sobre área", "Trabajo en el tiempo"], "respuesta": 0, "explicacion": "v = d/t."},
+    {"materia": "Física", "tema": "Movimiento", "pregunta": "Unidad de aceleración", "opciones": ["m/s", "m/s^2", "N", "J"], "respuesta": 1, "explicacion": "Cambio de velocidad en el tiempo."},
+    {"materia": "Física", "tema": "Movimiento", "pregunta": "Si a=0, la velocidad es:", "opciones": ["Cero", "Constante", "Aumenta", "Disminuye"], "respuesta": 1, "explicacion": "Si no hay aceleración, la velocidad no cambia."},
+    
+    {"materia": "Física", "tema": "Fuerza", "pregunta": "Fórmula de la segunda ley de Newton", "opciones": ["F = m*a", "F = m*v", "F = d/t", "E = mc^2"], "respuesta": 0, "explicacion": "La fuerza es igual a la masa por la aceleración."},
+    {"materia": "Física", "tema": "Fuerza", "pregunta": "Unidad de Fuerza", "opciones": ["Joule", "Newton", "Watt", "Pascal"], "respuesta": 1, "explicacion": "El Newton (N) mide la fuerza."},
+    {"materia": "Física", "tema": "Fuerza", "pregunta": "Acción y reacción es la:", "opciones": ["1ra Ley", "2da Ley", "3ra Ley", "Ley de Gravitación"], "respuesta": 2, "explicacion": "Tercera ley de Newton."},
+    
+    {"materia": "Física", "tema": "Energía", "pregunta": "Energía del movimiento", "opciones": ["Potencial", "Cinética", "Térmica", "Química"], "respuesta": 1, "explicacion": "La energía cinética depende de la velocidad."},
+    {"materia": "Física", "tema": "Energía", "pregunta": "Fórmula de Energía Cinética", "opciones": ["mgh", "1/2 mv^2", "F*d", "m*a"], "respuesta": 1, "explicacion": "Depende de la masa y el cuadrado de la velocidad."},
+    {"materia": "Física", "tema": "Energía", "pregunta": "Energía almacenada por altura", "opciones": ["Cinética", "Potencial", "Nuclear", "Radiante"], "respuesta": 1, "explicacion": "La energía potencial gravitatoria depende de la altura."},
+
+    {"materia": "Química", "tema": "Estructura atómica", "pregunta": "Partícula con carga negativa", "opciones": ["Protón", "Neutrón", "Electrón", "Fotón"], "respuesta": 2, "explicacion": "Los electrones orbitan el núcleo y son negativos."},
+    {"materia": "Química", "tema": "Estructura atómica", "pregunta": "Centro del átomo", "opciones": ["Corteza", "Núcleo", "Órbita", "Nube"], "respuesta": 1, "explicacion": "El núcleo contiene protones y neutrones."},
+    {"materia": "Química", "tema": "Estructura atómica", "pregunta": "Número atómico Z indica:", "opciones": ["Masa", "Protones", "Neutrones", "Isótopos"], "respuesta": 1, "explicacion": "Z es el número de protones."},
+
+    {"materia": "Química", "tema": "Nomenclatura", "pregunta": "Fórmula del agua", "opciones": ["H2O", "CO2", "O2", "NaCl"], "respuesta": 0, "explicacion": "Dos átomos de hidrógeno y uno de oxígeno."},
+    {"materia": "Química", "tema": "Nomenclatura", "pregunta": "¿Qué es NaCl?", "opciones": ["Agua", "Sal común", "Azúcar", "Ácido"], "respuesta": 1, "explicacion": "Cloruro de sodio."},
+    {"materia": "Química", "tema": "Nomenclatura", "pregunta": "Símbolo del Oxígeno", "opciones": ["Ox", "O", "O2", "X"], "respuesta": 1, "explicacion": "El símbolo elemental es O."},
+
+    {"materia": "Química", "tema": "Enlaces químicos", "pregunta": "Enlace que comparte electrones", "opciones": ["Iónico", "Covalente", "Metálico", "Puente de hidrógeno"], "respuesta": 1, "explicacion": "Los enlaces covalentes comparten electrones."},
+    {"materia": "Química", "tema": "Enlaces químicos", "pregunta": "Enlace que transfiere electrones", "opciones": ["Iónico", "Covalente", "Metálico", "Débil"], "respuesta": 0, "explicacion": "Uno cede y otro gana electrones."},
+    {"materia": "Química", "tema": "Enlaces químicos", "pregunta": "Unión entre metales", "opciones": ["Covalente", "Iónico", "Metálico", "Puente de hidrógeno"], "respuesta": 2, "explicacion": "Forma un mar de electrones."},
+
+    {"materia": "Biología", "tema": "Células", "pregunta": "Unidad fundamental de la vida", "opciones": ["Átomo", "Célula", "Órgano", "Tejido"], "respuesta": 1, "explicacion": "Todo ser vivo está formado por células."},
+    {"materia": "Biología", "tema": "Células", "pregunta": "Produce energía celular", "opciones": ["Núcleo", "Mitocondria", "Ribosoma", "Membrana"], "respuesta": 1, "explicacion": "Realiza la respiración celular."},
+    {"materia": "Biología", "tema": "Células", "pregunta": "Célula sin núcleo definido", "opciones": ["Eucariota", "Procariota", "Animal", "Vegetal"], "respuesta": 1, "explicacion": "Las procariotas tienen su ADN disperso."},
+
+    {"materia": "Biología", "tema": "Genética", "pregunta": "Molécula de la herencia", "opciones": ["ARN", "Proteína", "ADN", "Lípido"], "respuesta": 2, "explicacion": "El ADN contiene la información genética."},
+    {"materia": "Biología", "tema": "Genética", "pregunta": "¿Quién descubrió las leyes de la herencia?", "opciones": ["Darwin", "Mendel", "Pasteur", "Watson"], "respuesta": 1, "explicacion": "Gregor Mendel es el padre de la genética."},
+    {"materia": "Biología", "tema": "Genética", "pregunta": "Segmento de ADN que codifica un rasgo", "opciones": ["Gen", "Cromosoma", "Alelo", "Ribosoma"], "respuesta": 0, "explicacion": "El gen es la unidad básica de la herencia."},
+
+    {"materia": "Biología", "tema": "Ecosistemas", "pregunta": "Seres vivos de un ecosistema", "opciones": ["Factores abióticos", "Factores bióticos", "Clima", "Suelo"], "respuesta": 1, "explicacion": "Biota incluye a plantas, animales, etc."},
+    {"materia": "Biología", "tema": "Ecosistemas", "pregunta": "Organismos que producen su propio alimento", "opciones": ["Consumidores", "Descomponedores", "Productores", "Carnívoros"], "respuesta": 2, "explicacion": "Plantas y algas mediante fotosíntesis."},
+    {"materia": "Biología", "tema": "Ecosistemas", "pregunta": "Descomponen la materia muerta", "opciones": ["Herbívoros", "Descomponedores", "Productores", "Omnívoros"], "respuesta": 1, "explicacion": "Hongos y bacterias, reciclan nutrientes."}
+]

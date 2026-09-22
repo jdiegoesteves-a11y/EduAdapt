@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-4">
+    <h2 class="title">Mi Progreso</h2>
+    <p class="subtitle">Evolución de tus diagnósticos</p>
+</div>
+
+{% if not resultados %}
+    <div class="card text-center">
+        <p>No tienes resultados guardados todavía. Realiza un diagnóstico primero.</p>
+    </div>
+{% else %}
+    {% if grafico %}
+    <div class="card mb-4" style="max-width: 800px; margin: 0 auto;">
+        <h3>Último diagnóstico: {{ grafico.materia }} ({{ grafico.fecha }})</h3>
+        <canvas id="progresoChart" width="400" height="200"></canvas>
+    </div>
+    <script>
+        const ctx = document.getElementById('progresoChart').getContext('2d');
+        const labels = {{ grafico.labels | tojson }};
+        const data = {{ grafico.data | tojson }};
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Porcentaje de Rendimiento',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(52, 152, 219, 0.7)',
+                        'rgba(46, 204, 113, 0.7)',
+                        'rgba(155, 89, 182, 0.7)',
+                        'rgba(241, 196, 15, 0.7)',
+                        'rgba(231, 76, 60, 0.7)'
+                    ],
+                    borderColor: [
+                        '#2980b9', '#27ae60', '#8e44ad', '#f39c12', '#c0392b'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+    {% endif %}
+    
+    <div class="card mx-auto" style="max-width: 800px;">
+        <h3 class="mb-3">Historial (Últimos 5 diagnósticos)</h3>
+        <ul class="list-unstyled">
+            {% for r in resultados %}
+            <li class="history-item">
+                <span class="history-date">{{ r[1][:10] }}</span>
+                <span class="history-subject">{{ r[0] }}</span>
+                <span class="history-score badge {{ 'badge-success' if r[2] >= 80 else 'badge-warning' if r[2] >= 60 else 'badge-danger' }}">
+                    {{ "%.1f"|format(r[2]) }}%
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<div class="text-center mt-4">
+    <a href="{{ url_for('menu') }}" class="btn btn-outline">Volver al Menú</a>
+</div>
+{% endblock %}
