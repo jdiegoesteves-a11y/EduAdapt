@@ -19,9 +19,11 @@
             <div class="nav-links">
                 {% if session.get('rol') == 'ESTUDIANTE' %}
                     <a href="{{ url_for('menu') }}">Inicio</a>
+                    <a href="{{ url_for('tareas') }}">Tareas</a>
                     <a href="{{ url_for('progreso') }}">Progreso</a>
                 {% elif session.get('rol') == 'PROFESOR' %}
                     <a href="{{ url_for('profesor') }}">Panel Profesor</a>
+                    <a href="{{ url_for('profesor_tareas') }}">Calificar Tareas</a>
                 {% elif session.get('rol') == 'ADMIN' %}
                     <a href="{{ url_for('admin_dashboard') }}">Panel Admin</a>
                 {% endif %}

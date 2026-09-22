@@ -7,8 +7,9 @@
             <h2 class="display-5 text-primary"><i class="fas fa-chalkboard-teacher"></i> Panel del Profesor</h2>
             <p class="lead text-muted">Estadísticas y resultados de todos los estudiantes.</p>
         </div>
-        <div>
-            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-warning"><i class="fas fa-user-shield"></i> Aprobaciones</a>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('profesor_tareas') }}" class="btn btn-success"><i class="fas fa-clipboard-check me-1"></i> Calificar Tareas</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-warning"><i class="fas fa-user-shield me-1"></i> Aprobaciones</a>
         </div>
     </div>
     <div class="col-12"><hr></div>

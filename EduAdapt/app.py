@@ -13,6 +13,14 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = 'eduadapt_secret_2026'
 
+@app.before_request
+def check_approval():
+    if 'usuario_id' in session and request.endpoint not in ['index', 'register', 'logout', 'static']:
+        user = db.get_user(session['usuario_id'])
+        if not user or user.get('aprobado') == 0:
+            flash("Tu cuenta está pendiente de aprobación o fue suspendida.")
+            return redirect(url_for('logout'))
+
 # Configurar cliente de Gemini si hay clave
 gemini_api_key = os.environ.get("GEMINI_API_KEY")
 ai_client = None
@@ -341,7 +349,18 @@ def api_tarea_entregar():
     if tarea_id:
         db.submit_tarea(int(tarea_id), session['usuario_id'], respuesta)
         flash("Tarea enviada con éxito al profesor.")
+    
+    if 'tareas' in request.referrer:
+        return redirect(url_for('tareas'))
     return redirect(url_for('progreso'))
+
+@app.route('/tareas')
+def tareas():
+    """Vista dedicada a tareas para el estudiante."""
+    if session.get('rol') != 'ESTUDIANTE':
+        return redirect(url_for('index'))
+    progreso_data = db.get_student_full_progress(session['usuario_id'])
+    return render_template('tareas.html', progreso=progreso_data)
 
 # --- MÓDULO DEL PROFESOR ---
 @app.route('/profesor')
@@ -365,6 +384,14 @@ def profesor_estudiante(estudiante_id):
         
     return render_template('profesor_estudiante.html', progreso=progreso_data)
 
+@app.route('/profesor/tareas')
+def profesor_tareas():
+    """Panel global de tareas pendientes para calificar (Profesor)"""
+    if session.get('rol') not in ['PROFESOR', 'ADMIN']:
+        return redirect(url_for('index'))
+    tareas_pendientes = db.get_pending_grading()
+    return render_template('tareas_profesor.html', tareas=tareas_pendientes)
+
 @app.route('/profesor/tarea/calificar', methods=['POST'])
 def profesor_tarea_calificar():
     if session.get('rol') not in ['PROFESOR', 'ADMIN']:
@@ -375,6 +402,15 @@ def profesor_tarea_calificar():
     calificacion = request.form.get('calificacion', 10.0)
     estado = request.form.get('estado', 'RESUELTA_CORRECTA')
     
+    if entrega_id:
+        db.grade_tarea(int(entrega_id), estado, float(calificacion))
+        flash("Tarea calificada con éxito.")
+        
+    # Redirigir de vuelta a donde venía
+    if request.referrer and 'profesor/tareas' in request.referrer:
+        return redirect(url_for('profesor_tareas'))
+    return redirect(url_for('profesor_estudiante', estudiante_id=estudiante_id))
+
 @app.route('/api/ia_explicar', methods=['POST'])
 def api_ia_explicar():
     """Genera una explicación dinámica usando Google Gemini IA."""

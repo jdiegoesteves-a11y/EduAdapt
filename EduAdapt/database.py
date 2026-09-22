@@ -580,3 +580,34 @@ class Database:
             WHERE id = ?
         ''', (estado, calificacion, entrega_id))
         self.conn.commit()
+
+    def get_pending_grading(self):
+        """Obtiene todas las tareas entregadas que esperan calificación."""
+        cursor = self.conn.cursor()
+        cursor.execute('''
+            SELECT 
+                et.id as entrega_id,
+                t.titulo,
+                t.materia,
+                u.nombre as estudiante_nombre,
+                et.fecha_envio,
+                et.respuesta,
+                u.id as estudiante_id
+            FROM entregas_tareas et
+            JOIN tareas t ON et.tarea_id = t.id
+            JOIN usuarios u ON et.estudiante_id = u.id
+            WHERE et.estado = 'ENVIADA'
+            ORDER BY et.fecha_envio ASC
+        ''')
+        rows = cursor.fetchall()
+        return [
+            {
+                "entrega_id": r[0],
+                "titulo": r[1],
+                "materia": r[2],
+                "estudiante": r[3],
+                "fecha_envio": r[4],
+                "respuesta": r[5],
+                "estudiante_id": r[6]
+            } for r in rows
+        ]

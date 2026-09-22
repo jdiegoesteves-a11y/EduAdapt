@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="header-section text-center mb-4">
+    <h2 class="title"><i class="fas fa-tasks text-primary"></i> Mis Tareas</h2>
+    <p class="subtitle">Gestiona y envía tus asignaciones pendientes</p>
+</div>
+
+<div class="row">
+    <!-- Resumen de Tareas -->
+    <div class="col-md-4 mb-4">
+        <div class="card glass-card p-4 text-center h-100">
+            <h5 class="font-weight-bold mb-3">Resumen de Entregas</h5>
+            <div class="row mt-3">
+                <div class="col-6 mb-3">
+                    <span class="text-muted small text-uppercase font-weight-bold">Asignadas</span>
+                    <h3 class="text-primary font-weight-bold my-2">{{ progreso.stats_tareas.total_asignadas }}</h3>
+                </div>
+                <div class="col-6 mb-3">
+                    <span class="text-muted small text-uppercase font-weight-bold">Completadas</span>
+                    <h3 class="text-success font-weight-bold my-2">{{ progreso.stats_tareas.enviadas }}</h3>
+                </div>
+                <div class="col-12 mt-2">
+                    <span class="text-muted small text-uppercase font-weight-bold">Pendientes</span>
+                    <h2 class="display-5 text-warning font-weight-bold my-2">{{ progreso.stats_tareas.pendientes }}</h2>
+                </div>
+            </div>
+            <div class="progress mt-3" style="height: 10px;">
+                <div class="progress-bar bg-success" role="progressbar"
+                    style="width: {{ progreso.stats_tareas.porcentaje_completadas }}%;"
+                    aria-valuenow="{{ progreso.stats_tareas.porcentaje_completadas }}"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <small class="text-muted mt-2 d-block">{{ progreso.stats_tareas.porcentaje_completadas }}% Completado</small>
+        </div>
+    </div>
+
+    <!-- Lista de Tareas -->
+    <div class="col-md-8 mb-4">
+        <div class="card glass-card p-4">
+            <h5 class="font-weight-bold mb-3"><i class="fas fa-clipboard-list text-primary me-2"></i> Tareas y Deberes</h5>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="text-muted small">
+                            <th>Título</th>
+                            <th>Materia</th>
+                            <th>Entrega</th>
+                            <th>Estado</th>
+                            <th>Calificación</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tarea in progreso.stats_tareas.lista %}
+                            <tr>
+                                <td class="font-weight-bold">
+                                    {{ tarea.titulo }}
+                                    <br><small class="text-muted font-weight-normal">{{ tarea.descripcion }}</small>
+                                </td>
+                                <td><span class="badge bg-light text-dark border">{{ tarea.materia }}</span></td>
+                                <td class="text-muted small">{{ tarea.fecha_entrega }}</td>
+                                <td>
+                                    {% if tarea.estado == 'PENDIENTE' %}
+                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    {% elif tarea.estado == 'ENVIADA' %}
+                                        <span class="badge bg-info text-dark">Enviada</span>
+                                    {% elif tarea.estado == 'RESUELTA_CORRECTA' %}
+                                        <span class="badge bg-success">Aprobada</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ tarea.estado }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if tarea.calificacion is not none %}
+                                        <span class="font-weight-bold text-primary">{{ tarea.calificacion }}/10</span>
+                                    {% else %}
+                                        <span class="text-muted small">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if tarea.estado == 'PENDIENTE' %}
+                                        <button class="btn btn-sm btn-outline-primary btn-entregar"
+                                                data-id="{{ tarea.id }}"
+                                                data-titulo="{{ tarea.titulo }}"
+                                                data-descripcion="{{ tarea.descripcion }}">
+                                            <i class="fas fa-paper-plane me-1"></i> Entregar
+                                        </button>
+                                    {% elif tarea.estado == 'ENVIADA' %}
+                                        <span class="text-muted small">Esperando calificación</span>
+                                    {% else %}
+                                        <span class="text-success small"><i class="fas fa-check-circle"></i> Completado</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-3">No tienes tareas asignadas en este momento.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal único fuera de la tabla para entregar tarea -->
+<div class="modal fade" id="modalEntregarTarea" tabindex="-1" aria-labelledby="modalEntregarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="formEntregarTarea" action="{{ url_for('api_tarea_entregar') }}" method="POST">
+                <input type="hidden" name="tarea_id" id="modalTareaId">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalEntregarLabel">Entregar Tarea</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted" id="modalTareaDesc"></p>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tu Respuesta o Desarrollo:</label>
+                        <textarea name="respuesta" id="modalTareaRespuesta" class="form-control" rows="6"
+                            placeholder="Escribe aquí tu respuesta o resolución para el profesor..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-1"></i> Enviar Tarea</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Un solo modal reutilizable para todas las tareas
+    const modal = new bootstrap.Modal(document.getElementById('modalEntregarTarea'));
+    
+    document.querySelectorAll('.btn-entregar').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const titulo = this.dataset.titulo;
+            const desc = this.dataset.descripcion;
+            
+            document.getElementById('modalEntregarLabel').textContent = titulo;
+            document.getElementById('modalTareaId').value = id;
+            document.getElementById('modalTareaDesc').textContent = desc;
+            document.getElementById('modalTareaRespuesta').value = '';
+            
+            modal.show();
+        });
+    });
+});
+</script>
+{% endblock %}
