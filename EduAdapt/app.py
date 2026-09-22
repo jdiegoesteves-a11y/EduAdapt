@@ -43,8 +43,11 @@ def index():
             
         user = db.verify_login(username, password)
         if user:
-            if user['rol'] == 'ESTUDIANTE' and user['aprobado'] == 0:
-                flash("Tu cuenta de estudiante está pendiente de aprobación por un profesor/admin.")
+            if user['aprobado'] == 0:
+                if user['rol'] == 'PROFESOR':
+                    flash("Tu cuenta de profesor está pendiente de aprobación exclusiva por el Administrador (ADMIN).")
+                else:
+                    flash("Tu cuenta de estudiante está pendiente de aprobación por un profesor o administrador.")
                 return redirect(url_for('index'))
                 
             session['usuario_id'] = user['id']
@@ -78,10 +81,10 @@ def register():
             
         success, msg = db.register_user(nombre, curso, username, password, rol)
         if success:
-            if rol == 'ESTUDIANTE':
-                flash("Registro completado. Tu cuenta debe ser aprobada por un profesor o administrador antes de acceder.")
+            if rol == 'PROFESOR':
+                flash("Registro completado. Tu cuenta de profesor debe ser aprobada por el administrador antes de acceder.")
             else:
-                flash("Registro exitoso. Ahora puedes iniciar sesión.")
+                flash("Registro completado. Tu cuenta debe ser aprobada por un profesor o administrador antes de acceder.")
             return redirect(url_for('index'))
         else:
             flash(msg)
@@ -93,15 +96,25 @@ def register():
 def admin_dashboard():
     if session.get('rol') not in ['ADMIN', 'PROFESOR']:
         return redirect(url_for('index'))
-    pending_students = db.get_pending_students()
+    pending_students = db.get_pending_users()
     return render_template('admin.html', pendientes=pending_students)
 
 @app.route('/approve/<int:user_id>', methods=['GET', 'POST'])
 def approve_student(user_id):
     if session.get('rol') not in ['ADMIN', 'PROFESOR']:
         return redirect(url_for('index'))
+    
+    target_user = db.get_user(user_id)
+    if not target_user:
+        flash("Usuario no encontrado.")
+        return redirect(url_for('admin_dashboard'))
+        
+    if target_user['rol'] == 'PROFESOR' and session.get('rol') != 'ADMIN':
+        flash("Solo un ADMIN puede aprobar a un Profesor.")
+        return redirect(url_for('admin_dashboard'))
+        
     db.approve_student(user_id)
-    flash("Estudiante aprobado exitosamente.")
+    flash(f"{'Profesor' if target_user['rol'] == 'PROFESOR' else 'Estudiante'} aprobado exitosamente.")
     return redirect(url_for('admin_dashboard'))
 
 @app.route('/menu')

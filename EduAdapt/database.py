@@ -141,7 +141,7 @@ class Database:
         """Registra un nuevo usuario y autoasigna tareas si es estudiante."""
         cursor = self.conn.cursor()
         try:
-            aprobado = 1 if rol == 'PROFESOR' else 0 # Profesores pre-aprobados, estudiantes no.
+            aprobado = 0 # Todos los nuevos registros requieren aprobación.
             ahora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             cursor.execute('''
                 INSERT INTO usuarios (nombre, curso, username, password, rol, aprobado, ultimo_login, ultima_actividad) 
@@ -189,18 +189,26 @@ class Database:
         cursor.execute("UPDATE usuarios SET ultima_actividad = ? WHERE id = ?", (ahora, user_id))
         self.conn.commit()
 
-    def get_pending_students(self):
-        """Obtiene estudiantes pendientes de aprobación."""
+    def get_pending_users(self):
+        """Obtiene usuarios pendientes de aprobación."""
         cursor = self.conn.cursor()
-        cursor.execute("SELECT id, nombre, curso, username FROM usuarios WHERE rol = 'ESTUDIANTE' AND aprobado = 0")
+        cursor.execute("SELECT id, nombre, curso, username, rol FROM usuarios WHERE aprobado = 0")
         rows = cursor.fetchall()
-        return [{"id": r[0], "nombre": r[1], "curso": r[2], "username": r[3]} for r in rows]
+        return [{"id": r[0], "nombre": r[1], "curso": r[2], "username": r[3], "rol": r[4]} for r in rows]
 
     def approve_student(self, user_id):
-        """Aprueba a un estudiante."""
+        """Aprueba a un estudiante (o usuario general)."""
         cursor = self.conn.cursor()
         cursor.execute("UPDATE usuarios SET aprobado = 1 WHERE id = ?", (user_id,))
         self.conn.commit()
+
+    def get_user(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT id, nombre, curso, username, rol, aprobado FROM usuarios WHERE id = ?", (user_id,))
+        row = cursor.fetchone()
+        if row:
+            return {"id": row[0], "nombre": row[1], "curso": row[2], "username": row[3], "rol": row[4], "aprobado": row[5]}
+        return None
         
     def save_result(self, usuario_id, materia, porcentaje_general, resultados_tema, respuestas_detalle=None):
         """Guarda los resultados del diagnóstico y registra las respuestas individuales."""

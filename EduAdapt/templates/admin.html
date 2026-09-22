@@ -2,14 +2,14 @@
 {% block content %}
 <div class="header-section text-center mb-4">
     <h2 class="title"><i class="fas fa-user-shield"></i> Panel de Administración</h2>
-    <p class="subtitle">Aprobación de cuentas de estudiantes</p>
+    <p class="subtitle">Aprobación de cuentas de usuarios</p>
     <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm mt-2"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
 </div>
 
 <div class="row">
     <div class="col-md-12">
         <div class="card p-4">
-            <h4 class="mb-3">Estudiantes Pendientes de Aprobación</h4>
+            <h4 class="mb-3">Usuarios Pendientes de Aprobación</h4>
             
             {% if pendientes %}
             <div class="table-responsive">
@@ -18,20 +18,26 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Usuario</th>
-                            <th>Curso</th>
+                            <th>Rol</th>
+                            <th>Curso/Info</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for estudiante in pendientes %}
+                        {% for usuario in pendientes %}
                         <tr>
-                            <td>{{ estudiante.nombre }}</td>
-                            <td><code>{{ estudiante.username }}</code></td>
-                            <td>{{ estudiante.curso }}</td>
+                            <td>{{ usuario.nombre }}</td>
+                            <td><code>{{ usuario.username }}</code></td>
+                            <td><span class="badge {% if usuario.rol == 'PROFESOR' %}bg-primary{% else %}bg-info text-dark{% endif %}">{{ usuario.rol }}</span></td>
+                            <td>{{ usuario.curso or 'N/A' }}</td>
                             <td>
-                                <form action="{{ url_for('approve_student', user_id=estudiante.id) }}" method="POST" style="display:inline;">
-                                    <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Aprobar</button>
-                                </form>
+                                {% if usuario.rol == 'PROFESOR' and session.get('rol') != 'ADMIN' %}
+                                    <span class="text-muted small">Requiere ADMIN</span>
+                                {% else %}
+                                    <form action="{{ url_for('approve_student', user_id=usuario.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Aprobar</button>
+                                    </form>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -40,7 +46,7 @@
             </div>
             {% else %}
             <div class="alert alert-info text-center">
-                <i class="fas fa-info-circle"></i> No hay estudiantes pendientes de aprobación.
+                <i class="fas fa-info-circle"></i> No hay usuarios pendientes de aprobación.
             </div>
             {% endif %}
         </div>

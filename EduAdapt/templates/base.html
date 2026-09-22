@@ -14,11 +14,17 @@
 <body>
     <nav class="navbar">
         <div class="nav-content">
-            <a href="{{ url_for('menu') }}" class="logo">EduAdapt</a>
+            <a href="{{ url_for('menu') if session.get('rol') == 'ESTUDIANTE' else url_for('index') }}" class="logo">EduAdapt</a>
             {% if session.get('usuario_id') %}
             <div class="nav-links">
-                <a href="{{ url_for('menu') }}">Inicio</a>
-                <a href="{{ url_for('progreso') }}">Progreso</a>
+                {% if session.get('rol') == 'ESTUDIANTE' %}
+                    <a href="{{ url_for('menu') }}">Inicio</a>
+                    <a href="{{ url_for('progreso') }}">Progreso</a>
+                {% elif session.get('rol') == 'PROFESOR' %}
+                    <a href="{{ url_for('profesor') }}">Panel Profesor</a>
+                {% elif session.get('rol') == 'ADMIN' %}
+                    <a href="{{ url_for('admin_dashboard') }}">Panel Admin</a>
+                {% endif %}
                 <a href="{{ url_for('logout') }}" class="btn-logout">Salir</a>
             </div>
             {% endif %}
