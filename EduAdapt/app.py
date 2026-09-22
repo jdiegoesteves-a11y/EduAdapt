@@ -2,13 +2,16 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from database import Database
 from quiz import Quiz
 from analyzer import ResultsAnalyzer
+import os
 import json
 
 app = Flask(__name__)
 app.secret_key = 'eduadapt_secret_2026'
 
 db = Database()
-quiz = Quiz("preguntas.json")
+# Usar ruta absoluta para leer el archivo en Vercel
+json_path = os.path.join(os.path.dirname(__file__), 'preguntas.json')
+quiz = Quiz(json_path)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

@@ -1,7 +1,12 @@
 import sqlite3
 import json
+import os
 
-DB_NAME = "eduadapt.db"
+# En Vercel, el sistema de archivos es de solo lectura excepto /tmp
+if os.environ.get("VERCEL"):
+    DB_NAME = "/tmp/eduadapt.db"
+else:
+    DB_NAME = "eduadapt.db"
 
 class Database:
     def __init__(self):
