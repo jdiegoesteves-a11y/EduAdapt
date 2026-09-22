@@ -145,8 +145,57 @@ function verificarRespuesta() {
     document.getElementById('practicaFeedback').style.display = 'block';
     document.getElementById('btnVerificar').style.display = 'none';
     
+    // Configurar y mostrar el botón del Tutor IA
+    const aiContainer = document.getElementById('aiContainer');
+    if (!aiContainer) {
+        document.getElementById('practicaFeedback').innerHTML += `
+            <div id="aiContainer" class="mt-4">
+                <button id="btnAskAI" class="btn btn-outline-info" onclick="askAITutor()">
+                    <i class="fas fa-robot me-2"></i> 🤖 Preguntar a la IA
+                </button>
+                <div id="aiResponse" class="card glass-card text-left mt-3 p-3" style="display: none; border-left: 4px solid #0dcaf0;">
+                </div>
+            </div>
+        `;
+    } else {
+        document.getElementById('aiResponse').style.display = 'none';
+        document.getElementById('aiResponse').innerHTML = '';
+        document.getElementById('btnAskAI').style.display = 'inline-block';
+    }
+    
     if (indicePractica === preguntasPractica.length - 1) {
         document.getElementById('btnSiguiente').innerText = "Terminar Práctica";
+    }
+}
+
+async function askAITutor() {
+    const btnAsk = document.getElementById('btnAskAI');
+    const responseBox = document.getElementById('aiResponse');
+    
+    btnAsk.style.display = 'none';
+    responseBox.style.display = 'block';
+    responseBox.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin fa-2x text-info"></i><p class="mt-2 text-muted">La IA está analizando tu respuesta...</p></div>';
+    
+    const pregunta = preguntasPractica[indicePractica];
+    const materia = document.getElementById('materiaSelect').value;
+    
+    try {
+        const res = await fetch('/api/ia_explicar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                materia: materia,
+                tema: pregunta.tema,
+                pregunta: pregunta.pregunta,
+                opcion_correcta: pregunta.opciones[pregunta.respuesta],
+                opcion_seleccionada: pregunta.opciones[seleccionActual]
+            })
+        });
+        
+        const data = await res.json();
+        responseBox.innerHTML = `<h5><i class="fas fa-robot text-info me-2"></i> Tutor IA:</h5>` + (data.html || data.error);
+    } catch(e) {
+        responseBox.innerHTML = `<p class="text-danger">Error de conexión con el Tutor IA.</p>`;
     }
 }
 

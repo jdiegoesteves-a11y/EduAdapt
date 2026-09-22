@@ -5,9 +5,22 @@ from analyzer import ResultsAnalyzer
 import os
 import json
 import urllib.parse
+from dotenv import load_dotenv
+from google import genai
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'eduadapt_secret_2026'
+
+# Configurar cliente de Gemini si hay clave
+gemini_api_key = os.environ.get("GEMINI_API_KEY")
+ai_client = None
+if gemini_api_key:
+    try:
+        ai_client = genai.Client(api_key=gemini_api_key)
+    except Exception as e:
+        print(f"Error inicializando Gemini: {e}")
 
 db = Database()
 quiz = Quiz()
@@ -81,9 +94,9 @@ def admin_dashboard():
     if session.get('rol') not in ['ADMIN', 'PROFESOR']:
         return redirect(url_for('index'))
     pending_students = db.get_pending_students()
-    return render_template('admin.html', students=pending_students)
+    return render_template('admin.html', pendientes=pending_students)
 
-@app.route('/approve/<int:user_id>')
+@app.route('/approve/<int:user_id>', methods=['GET', 'POST'])
 def approve_student(user_id):
     if session.get('rol') not in ['ADMIN', 'PROFESOR']:
         return redirect(url_for('index'))
@@ -349,11 +362,74 @@ def profesor_tarea_calificar():
     calificacion = request.form.get('calificacion', 10.0)
     estado = request.form.get('estado', 'RESUELTA_CORRECTA')
     
-    if entrega_id:
-        db.grade_tarea(int(entrega_id), estado, float(calificacion))
-        flash("Tarea calificada correctamente.")
+@app.route('/api/ia_explicar', methods=['POST'])
+def api_ia_explicar():
+    """Genera una explicación dinámica usando Google Gemini IA."""
+    if 'usuario_id' not in session:
+        return jsonify({"error": "No autenticado"}), 401
         
-    return redirect(url_for('profesor_estudiante', estudiante_id=estudiante_id))
+    data = request.get_json() or {}
+    materia = data.get('materia', 'General')
+    tema = data.get('tema', 'General')
+    pregunta = data.get('pregunta', '')
+    opcion_correcta = data.get('opcion_correcta', '')
+    opcion_seleccionada = data.get('opcion_seleccionada', '')
+    
+    current_key = os.environ.get("GEMINI_API_KEY")
+    if not current_key and not ai_client:
+        return jsonify({
+            "html": "<p><strong>Tutor IA no configurado:</strong> Configura <code>GEMINI_API_KEY</code> en tu archivo <code>.env</code> para activar el tutor interactivo.</p>"
+        })
+        
+    try:
+        client = ai_client or genai.Client(api_key=current_key)
+        prompt = f"""
+        Eres un tutor educativo paciente y empático en una plataforma llamada EduAdapt.
+        Un estudiante está practicando la materia '{materia}', tema '{tema}'.
+        
+        Pregunta: "{pregunta}"
+        Respuesta correcta: "{opcion_correcta}"
+        Lo que respondió el estudiante: "{opcion_seleccionada}"
+        
+        Por favor, explícale de forma amigable, clara y pedagógica (en 2 o 3 párrafos breves):
+        1. Si su respuesta fue incorrecta, explícale de forma motivadora por qué no es la opción adecuada. Si fue correcta, felicítalo y profundiza un poco.
+        2. Explica el concepto y fundamento detrás de la respuesta correcta de forma comprensible e intuitiva.
+        3. Formatea la respuesta con etiquetas HTML simples (<p>, <b>, <i>, <ul>, <li>) para que se visualice estéticamente en la página.
+        IMPORTANTE: Responde ÚNICAMENTE con las etiquetas HTML. No incluyas bloques de código Markdown con ```html ni ```.
+        """
+        
+        candidate_models = ['gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-3.8-flash']
+        response_text = None
+        last_error = None
+        
+        for model_name in candidate_models:
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt
+                )
+                if response and response.text:
+                    response_text = response.text
+                    break
+            except Exception as model_err:
+                last_error = model_err
+                continue
+                
+        if not response_text:
+            raise last_error or Exception("No se pudo obtener respuesta del modelo.")
+            
+        html_content = response_text
+        # Limpiar posibles delimitadores de código markdown
+        if html_content.startswith("```html"):
+            html_content = html_content[7:]
+        elif html_content.startswith("```"):
+            html_content = html_content[3:]
+        if html_content.endswith("```"):
+            html_content = html_content[:-3]
+            
+        return jsonify({"html": html_content.strip()})
+    except Exception as e:
+        return jsonify({"html": f"<p class='text-danger'><b>Error al consultar al Tutor IA:</b> {str(e)}</p>"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

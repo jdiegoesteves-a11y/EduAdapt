@@ -1,27 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="hero-section text-center">
-    <h2 class="title">Registro en <span class="highlight">EduAdapt</span></h2>
-    <p class="subtitle">Crea tu cuenta para acceder a la plataforma.</p>
+<div class="hero-section text-center d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
+    <div style="margin-bottom: 2rem;">
+        <h2 class="title">Registro en <span class="highlight">EduAdapt</span></h2>
+        <p class="subtitle mt-3">Crea tu cuenta para acceder a la plataforma educativa.</p>
+    </div>
     
-    <div class="card login-card text-left">
+    <div class="card login-card text-left w-100" style="max-width: 500px;">
         <form method="POST">
-            <div class="form-group">
-                <label>Rol:</label>
-                <select name="rol" class="form-control" id="rolSelect" required>
-                    <option value="ESTUDIANTE">Alumno</option>
+            <div class="form-group mb-4">
+                <label><i class="fas fa-id-badge text-primary me-2"></i> Rol</label>
+                <select name="rol" class="form-control form-select-lg" id="rolSelect" required>
+                    <option value="ESTUDIANTE">Estudiante</option>
                     <option value="PROFESOR">Profesor</option>
                 </select>
             </div>
             
-            <div class="form-group">
-                <label>Nombre Completo:</label>
-                <input type="text" name="nombre" class="form-control" required placeholder="Ej. Juan Pérez">
+            <div class="form-group mb-4">
+                <label><i class="fas fa-font text-primary me-2"></i> Nombre Completo</label>
+                <input type="text" name="nombre" class="form-control form-control-lg" required placeholder="Ej. Juan Pérez">
             </div>
             
-            <div class="form-group" id="cursoGroup">
-                <label>Curso:</label>
-                <select name="curso" class="form-control">
+            <div class="form-group mb-4" id="cursoGroup">
+                <label><i class="fas fa-graduation-cap text-primary me-2"></i> Curso</label>
+                <select name="curso" class="form-control form-select-lg">
                     <option value="1er Año">1er Año</option>
                     <option value="2do Año">2do Año</option>
                     <option value="3er Año">3er Año</option>
@@ -30,22 +32,22 @@
                 </select>
             </div>
             
-            <div class="form-group">
-                <label>Nombre de Usuario (Para iniciar sesión):</label>
-                <input type="text" name="username" class="form-control" required placeholder="Ej. juanp123">
+            <div class="form-group mb-4">
+                <label><i class="fas fa-user text-primary me-2"></i> Nombre de Usuario (Para iniciar sesión)</label>
+                <input type="text" name="username" class="form-control form-control-lg" required placeholder="Ej. juanp123">
             </div>
             
-            <div class="form-group">
-                <label>Contraseña:</label>
-                <input type="password" name="password" class="form-control" required placeholder="Tu contraseña segura">
+            <div class="form-group mb-4">
+                <label><i class="fas fa-lock text-primary me-2"></i> Contraseña</label>
+                <input type="password" name="password" class="form-control form-control-lg" required placeholder="Tu contraseña segura">
             </div>
             
-            <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
+            <button type="submit" class="btn btn-primary btn-block btn-lg mt-3"><i class="fas fa-check-circle me-2"></i> Registrarse</button>
         </form>
     </div>
     
     <div class="mt-4">
-        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i> Volver al Inicio</a>
     </div>
 </div>
 

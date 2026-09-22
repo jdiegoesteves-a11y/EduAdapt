@@ -1,74 +1,424 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="text-center mb-4">
-    <h2 class="title">Mi Progreso</h2>
-    <p class="subtitle">Evolución de tus diagnósticos</p>
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h2 class="title mt-3">Mi <span class="highlight">Progreso</span></h2>
+        <p class="subtitle mt-2">Monitorea tu evolución, precisión y temas reforzados en tiempo real.</p>
+    </div>
 </div>
 
-{% if not resultados %}
-    <div class="card text-center">
-        <p>No tienes resultados guardados todavía. Realiza un diagnóstico primero.</p>
+{% if not progreso or not progreso.tiene_datos %}
+    <div class="card glass-card text-center mx-auto p-5" style="max-width: 600px;">
+        <div class="mb-4">
+            <i class="fas fa-chart-line fa-4x" style="color: var(--primary); opacity: 0.8;"></i>
+        </div>
+        <h3 class="font-weight-bold mb-2">¡Comienza tu viaje de aprendizaje!</h3>
+        <p class="text-muted mb-4">
+            Aún no has completado ningún examen diagnóstico ni sesión de práctica. 
+            Realiza tu primer diagnóstico para que el sistema genere automáticamente tus estadísticas y gráficos adaptativos.
+        </p>
+        <a href="{{ url_for('seleccion') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-play me-2"></i> Iniciar Examen Diagnóstico
+        </a>
     </div>
 {% else %}
-    {% if grafico %}
-    <div class="card mb-4" style="max-width: 800px; margin: 0 auto;">
-        <h3>Último diagnóstico: {{ grafico.materia }} ({{ grafico.fecha }})</h3>
-        <canvas id="progresoChart" width="400" height="200"></canvas>
+    <!-- Resumen General en Tarjetas Métricas -->
+    <div class="row text-center mb-4 g-3">
+        <div class="col-md-3 col-6">
+            <div class="card glass-card h-100 p-3">
+                <span class="text-muted small text-uppercase font-weight-bold">Progreso Total</span>
+                <h2 class="display-5 text-primary font-weight-bold my-2">{{ progreso.progreso_total }}%</h2>
+                <small class="text-muted">Promedio global</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card glass-card h-100 p-3">
+                <span class="text-muted small text-uppercase font-weight-bold">Precisión General</span>
+                <h2 class="display-5 {% if progreso.stats_respuestas.precision >= 80 %}text-success{% elif progreso.stats_respuestas.precision >= 60 %}text-warning{% else %}text-danger{% endif %} font-weight-bold my-2">
+                    {{ progreso.stats_respuestas.precision }}%
+                </h2>
+                <small class="text-muted">{{ progreso.stats_respuestas.correctas }} de {{ progreso.stats_respuestas.total_respondidas }} aciertos</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card glass-card h-100 p-3">
+                <span class="text-muted small text-uppercase font-weight-bold">Preguntas Respondidas</span>
+                <h2 class="display-5 text-info font-weight-bold my-2">{{ progreso.stats_respuestas.total_respondidas }}</h2>
+                <small class="text-muted">Diagnósticos y prácticas</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card glass-card h-100 p-3">
+                <span class="text-muted small text-uppercase font-weight-bold">Tareas Pendientes</span>
+                <h2 class="display-5 text-warning font-weight-bold my-2">{{ progreso.stats_tareas.pendientes }}</h2>
+                <small class="text-muted">De {{ progreso.stats_tareas.total_asignadas }} asignadas</small>
+            </div>
+        </div>
     </div>
-    <script>
-        const ctx = document.getElementById('progresoChart').getContext('2d');
-        const labels = {{ grafico.labels | tojson }};
-        const data = {{ grafico.data | tojson }};
+
+    <!-- Gráficos Interactivos -->
+    <div class="row mb-4 g-4">
+        <div class="col-lg-7">
+            <div class="card glass-card h-100 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 font-weight-bold"><i class="fas fa-chart-line text-primary me-2"></i> Evolución de Precisión</h5>
+                    <span class="badge bg-primary-subtle text-primary">Histórico</span>
+                </div>
+                <div style="position: relative; height: 280px; width: 100%;">
+                    <canvas id="evolucionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card glass-card h-100 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 font-weight-bold"><i class="fas fa-chart-pie text-info me-2"></i> Proporción de Respuestas</h5>
+                    <span class="badge bg-info-subtle text-info">General</span>
+                </div>
+                <div style="position: relative; height: 280px; width: 100%;">
+                    <canvas id="donaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4 g-4">
+        <div class="col-12">
+            <div class="card glass-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 font-weight-bold"><i class="fas fa-chart-bar text-success me-2"></i> Rendimiento por Materia / Área</h5>
+                    <span class="badge bg-success-subtle text-success">Promedio %</span>
+                </div>
+                <div style="position: relative; height: 260px; width: 100%;">
+                    <canvas id="materiasChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clasificación de Temas por Estado -->
+    <div class="row mb-4 g-3">
+        <div class="col-md-4">
+            <div class="card glass-card h-100 p-3" style="border-top: 4px solid var(--success) !important;">
+                <h5 class="text-success font-weight-bold mb-3"><i class="fas fa-check-circle me-2"></i> Dominados (&ge;80%)</h5>
+                <ul class="list-unstyled mb-0">
+                    {% for tema in progreso.temas_dominados %}
+                        <li class="p-2 mb-2 rounded d-flex justify-content-between align-items-center" style="background: rgba(46, 204, 113, 0.1);">
+                            <span class="font-weight-medium">{{ tema.tema }}</span>
+                            <span class="badge bg-success">{{ tema.promedio }}%</span>
+                        </li>
+                    {% else %}
+                        <li class="text-muted text-center py-3">Aún no hay temas en este nivel. ¡Sigue practicando!</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
         
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Porcentaje de Rendimiento',
-                    data: data,
-                    backgroundColor: [
-                        'rgba(52, 152, 219, 0.7)',
-                        'rgba(46, 204, 113, 0.7)',
-                        'rgba(155, 89, 182, 0.7)',
-                        'rgba(241, 196, 15, 0.7)',
-                        'rgba(231, 76, 60, 0.7)'
-                    ],
-                    borderColor: [
-                        '#2980b9', '#27ae60', '#8e44ad', '#f39c12', '#c0392b'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
+        <div class="col-md-4">
+            <div class="card glass-card h-100 p-3" style="border-top: 4px solid var(--warning) !important;">
+                <h5 class="text-warning font-weight-bold mb-3"><i class="fas fa-hourglass-half me-2"></i> En Aprendizaje (60%-79%)</h5>
+                <ul class="list-unstyled mb-0">
+                    {% for tema in progreso.temas_aprendidos %}
+                        <li class="p-2 mb-2 rounded d-flex justify-content-between align-items-center" style="background: rgba(241, 196, 15, 0.1);">
+                            <span class="font-weight-medium">{{ tema.tema }}</span>
+                            <span class="badge bg-warning text-dark">{{ tema.promedio }}%</span>
+                        </li>
+                    {% else %}
+                        <li class="text-muted text-center py-3">No tienes temas intermedios en este momento.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card glass-card h-100 p-3" style="border-top: 4px solid var(--danger) !important;">
+                <h5 class="text-danger font-weight-bold mb-3"><i class="fas fa-exclamation-circle me-2"></i> Por Reforzar (&lt;60%)</h5>
+                <ul class="list-unstyled mb-0">
+                    {% for tema in progreso.temas_pendientes %}
+                        <li class="p-2 mb-2 rounded d-flex justify-content-between align-items-center" style="background: rgba(231, 76, 60, 0.1);">
+                            <span class="font-weight-medium">{{ tema.tema }}</span>
+                            <span class="badge bg-danger">{{ tema.promedio }}%</span>
+                        </li>
+                    {% else %}
+                        <li class="text-muted text-center py-3">¡Excelente! No tienes temas críticos pendientes.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de Evaluaciones y Prácticas Recientes -->
+    <div class="card glass-card mb-4 p-4">
+        <h5 class="font-weight-bold mb-3"><i class="fas fa-history text-secondary me-2"></i> Últimas Evaluaciones y Prácticas</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-muted small">
+                        <th>Materia</th>
+                        <th>Temas Evaluados</th>
+                        <th>Calificación</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for act in progreso.ultimos_practicados %}
+                        <tr>
+                            <td class="font-weight-bold">{{ act.materia }}</td>
+                            <td><span class="text-muted">{{ act.temas }}</span></td>
+                            <td>
+                                <span class="badge {% if act.porcentaje >= 80 %}bg-success{% elif act.porcentaje >= 60 %}bg-warning text-dark{% else %}bg-danger{% endif %} px-3 py-2">
+                                    {{ act.porcentaje }}%
+                                </span>
+                            </td>
+                            <td class="text-muted small">{{ act.fecha }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-3">Sin actividades registradas recientemente.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tareas Asignadas por el Profesor -->
+    <div class="card glass-card mb-4 p-4">
+        <h5 class="font-weight-bold mb-3"><i class="fas fa-tasks text-primary me-2"></i> Tareas y Deberes Asignados</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="text-muted small">
+                        <th>Título</th>
+                        <th>Materia</th>
+                        <th>Entrega</th>
+                        <th>Estado</th>
+                        <th>Calificación</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tarea in progreso.stats_tareas.lista %}
+                        <tr>
+                            <td class="font-weight-bold">
+                                {{ tarea.titulo }}
+                                <br><small class="text-muted font-weight-normal">{{ tarea.descripcion }}</small>
+                            </td>
+                            <td><span class="badge bg-light text-dark border">{{ tarea.materia }}</span></td>
+                            <td class="text-muted small">{{ tarea.fecha_entrega }}</td>
+                            <td>
+                                {% if tarea.estado == 'PENDIENTE' %}
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                {% elif tarea.estado == 'ENVIADA' %}
+                                    <span class="badge bg-info text-dark">Enviada</span>
+                                {% elif tarea.estado == 'RESUELTA_CORRECTA' %}
+                                    <span class="badge bg-success">Aprobada</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ tarea.estado }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if tarea.calificacion is not none %}
+                                    <span class="font-weight-bold text-primary">{{ tarea.calificacion }}/10</span>
+                                {% else %}
+                                    <span class="text-muted small">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if tarea.estado == 'PENDIENTE' %}
+                                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalTarea{{ tarea.id }}">
+                                        <i class="fas fa-paper-plane me-1"></i> Entregar
+                                    </button>
+
+                                    <!-- Modal para Enviar Tarea -->
+                                    <div class="modal fade" id="modalTarea{{ tarea.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content text-start">
+                                                <form action="{{ url_for('api_tarea_entregar') }}" method="POST">
+                                                    <input type="hidden" name="tarea_id" value="{{ tarea.id }}">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">{{ tarea.titulo }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p class="text-muted">{{ tarea.descripcion }}</p>
+                                                        <div class="mb-3">
+                                                            <label class="form-label font-weight-bold">Tu Respuesta o Desarrollo:</label>
+                                                            <textarea name="respuesta" class="form-control" rows="4" placeholder="Escribe aquí tu respuesta o resolución para el profesor..." required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="submit" class="btn btn-primary">Enviar Tarea</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <span class="text-success small"><i class="fas fa-check"></i> Enviada</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-3">No tienes tareas asignadas por el profesor en este momento.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Inicialización de Gráficos con Chart.js -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Gráfico de Evolución de Precisión
+            const evolucionData = {{ progreso.stats_respuestas.evolucion | tojson | safe }} || [];
+            const canvasEvolucion = document.getElementById('evolucionChart');
+            if (canvasEvolucion) {
+                const labelsEvol = evolucionData.length > 0 ? evolucionData.map(d => d.fecha) : ['Inicio'];
+                const valuesEvol = evolucionData.length > 0 ? evolucionData.map(d => d.precision) : [{{ progreso.stats_respuestas.precision }}];
+
+                new Chart(canvasEvolucion.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: labelsEvol,
+                        datasets: [{
+                            label: 'Precisión (%)',
+                            data: valuesEvol,
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.15)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#4f46e5',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            fill: true,
+                            tension: 0.35
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(val) { return val + '%'; }
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(ctx) { return ' Precisión: ' + ctx.parsed.y + '%'; }
+                                }
+                            }
+                        }
                     }
-                }
+                });
+            }
+
+            // 2. Gráfico de Dona: Proporción de Aciertos vs Errores
+            const canvasDona = document.getElementById('donaChart');
+            if (canvasDona) {
+                const correctas = {{ progreso.stats_respuestas.correctas }};
+                const incorrectas = {{ progreso.stats_respuestas.incorrectas }};
+                const tieneRespuestas = (correctas + incorrectas) > 0;
+
+                new Chart(canvasDona.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: tieneRespuestas ? ['Aciertos', 'Por Mejorar'] : ['Sin respuestas'],
+                        datasets: [{
+                            data: tieneRespuestas ? [correctas, incorrectas] : [1],
+                            backgroundColor: tieneRespuestas ? ['#10b981', '#ef4444'] : ['#e2e8f0'],
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { boxWidth: 14, padding: 16 }
+                            }
+                        },
+                        cutout: '70%'
+                    }
+                });
+            }
+
+            // 3. Gráfico de Barras: Rendimiento por Materia
+            const areasData = {{ progreso.progreso_areas | tojson | safe }} || [];
+            const canvasMaterias = document.getElementById('materiasChart');
+            if (canvasMaterias) {
+                const labelsAreas = areasData.map(d => d.area);
+                const valuesAreas = areasData.map(d => d.promedio);
+                const colors = [
+                    'rgba(79, 70, 229, 0.8)',
+                    'rgba(16, 185, 129, 0.8)',
+                    'rgba(245, 158, 11, 0.8)',
+                    'rgba(239, 68, 68, 0.8)',
+                    'rgba(6, 182, 212, 0.8)'
+                ];
+
+                new Chart(canvasMaterias.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: labelsAreas.length > 0 ? labelsAreas : ['General'],
+                        datasets: [{
+                            label: 'Promedio Obtenido',
+                            data: valuesAreas.length > 0 ? valuesAreas : [{{ progreso.progreso_total }}],
+                            backgroundColor: colors.slice(0, Math.max(labelsAreas.length, 1)),
+                            borderRadius: 8,
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(val) { return val + '%'; }
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(ctx) { return ' Promedio: ' + ctx.parsed.y + '%'; }
+                                }
+                            }
+                        }
+                    }
+                });
             }
         });
     </script>
-    {% endif %}
-    
-    <div class="card mx-auto" style="max-width: 800px;">
-        <h3 class="mb-3">Historial (Últimos 5 diagnósticos)</h3>
-        <ul class="list-unstyled">
-            {% for r in resultados %}
-            <li class="history-item">
-                <span class="history-date">{{ r[1][:10] }}</span>
-                <span class="history-subject">{{ r[0] }}</span>
-                <span class="history-score badge {{ 'badge-success' if r[2] >= 80 else 'badge-warning' if r[2] >= 60 else 'badge-danger' }}">
-                    {{ "%.1f"|format(r[2]) }}%
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
 {% endif %}
 
-<div class="text-center mt-4">
-    <a href="{{ url_for('menu') }}" class="btn btn-outline">Volver al Menú</a>
+<div class="text-center mt-5 mb-4">
+    <a href="{{ url_for('menu') }}" class="btn btn-outline-secondary px-4 py-2">
+        <i class="fas fa-arrow-left me-2"></i> Volver al Menú
+    </a>
 </div>
 {% endblock %}

@@ -455,9 +455,12 @@ class Database:
             "lista": lista_tareas
         }
         
+        tiene_datos = bool(res_rows or total_resp > 0 or ultimos_practicados)
+        
         return {
             "estudiante": estudiante_info,
             "progreso_total": progreso_total,
+            "tiene_datos": tiene_datos,
             "temas_dominados": temas_dominados,
             "temas_aprendidos": temas_aprendidos,
             "temas_pendientes": temas_pendientes,

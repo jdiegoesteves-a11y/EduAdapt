@@ -1,20 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="text-center">
-    <h2 class="title mb-4">¡Hola, {{ nombre }}!</h2>
-    <div class="menu-grid">
-        <a href="{{ url_for('seleccion') }}" class="card menu-card">
-            <h3>Realizar Diagnóstico</h3>
-            <p>Evalúa tus conocimientos e identifica tus debilidades.</p>
-        </a>
-        <a href="{{ url_for('practica') }}" class="card menu-card">
-            <h3>Modo Práctica</h3>
-            <p>Resuelve ejercicios de temas específicos sin presión.</p>
-        </a>
-        <a href="{{ url_for('progreso') }}" class="card menu-card">
-            <h3>Mi Progreso</h3>
-            <p>Revisa tus estadísticas y evolución.</p>
-        </a>
-    </div>
+<div class="text-center mb-5">
+    <h2 class="title mt-3">¡Hola, <span class="highlight">{{ nombre }}</span>!</h2>
+    <p class="subtitle mt-2">¿Qué deseas hacer hoy?</p>
+</div>
+
+<div class="menu-grid">
+    <a href="{{ url_for('seleccion') }}" class="card glass-card menu-card text-decoration-none">
+        <div class="icon-wrapper"><i class="fas fa-tasks"></i></div>
+        <h3>Diagnóstico</h3>
+        <p class="text-muted">Evalúa tus conocimientos e identifica tus debilidades.</p>
+    </a>
+    
+    <a href="{{ url_for('practica') }}" class="card glass-card menu-card text-decoration-none">
+        <div class="icon-wrapper"><i class="fas fa-dumbbell"></i></div>
+        <h3>Modo Práctica</h3>
+        <p class="text-muted">Resuelve ejercicios de temas específicos sin presión.</p>
+    </a>
+    
+    <a href="{{ url_for('progreso') }}" class="card glass-card menu-card text-decoration-none">
+        <div class="icon-wrapper"><i class="fas fa-chart-line"></i></div>
+        <h3>Mi Progreso</h3>
+        <p class="text-muted">Revisa tus estadísticas y evolución.</p>
+    </a>
+    
+    <a href="{{ url_for('materiales') }}" class="card glass-card menu-card text-decoration-none">
+        <div class="icon-wrapper"><i class="fas fa-book-open"></i></div>
+        <h3>Materiales</h3>
+        <p class="text-muted">Consulta fórmulas y teoría clave de todas las materias.</p>
+    </a>
 </div>
 {% endblock %}

@@ -29,7 +29,7 @@
                             <td><code>{{ estudiante.username }}</code></td>
                             <td>{{ estudiante.curso }}</td>
                             <td>
-                                <form action="{{ url_for('approve', user_id=estudiante.id) }}" method="POST" style="display:inline;">
+                                <form action="{{ url_for('approve_student', user_id=estudiante.id) }}" method="POST" style="display:inline;">
                                     <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Aprobar</button>
                                 </form>
                             </td>
