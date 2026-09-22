@@ -13,6 +13,21 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = 'eduadapt_secret_2026'
 
+# Configurar cliente de Gemini
+gemini_api_key = os.environ.get("GEMINI_API_KEY")
+ai_client = None
+if gemini_api_key:
+    try:
+        ai_client = genai.Client(api_key=gemini_api_key)
+        print(f"[OK] Gemini configurado correctamente.")
+    except Exception as e:
+        print(f"[ERROR] Error inicializando Gemini: {e}")
+else:
+    print("[WARN] GEMINI_API_KEY no encontrada en el entorno.")
+
+db = Database()
+quiz = Quiz()
+
 @app.before_request
 def check_approval():
     if 'usuario_id' in session and request.endpoint not in ['index', 'register', 'logout', 'static']:
@@ -20,18 +35,6 @@ def check_approval():
         if not user or user.get('aprobado') == 0:
             flash("Tu cuenta está pendiente de aprobación o fue suspendida.")
             return redirect(url_for('logout'))
-
-# Configurar cliente de Gemini si hay clave
-gemini_api_key = os.environ.get("GEMINI_API_KEY")
-ai_client = None
-if gemini_api_key:
-    try:
-        ai_client = genai.Client(api_key=gemini_api_key)
-    except Exception as e:
-        print(f"Error inicializando Gemini: {e}")
-
-db = Database()
-quiz = Quiz()
 
 @app.before_request
 def track_user_activity():
