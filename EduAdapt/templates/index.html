@@ -7,25 +7,19 @@
     <div class="card login-card">
         <form method="POST">
             <div class="form-group">
-                <label>Nombre del Estudiante:</label>
-                <input type="text" name="nombre" class="form-control" required placeholder="Ej. Juan Pérez">
+                <label>Nombre de Usuario:</label>
+                <input type="text" name="username" class="form-control" required placeholder="Tu usuario">
             </div>
             <div class="form-group">
-                <label>Curso:</label>
-                <select name="curso" class="form-control" required>
-                    <option value="1er Año">1er Año</option>
-                    <option value="2do Año">2do Año</option>
-                    <option value="3er Año">3er Año</option>
-                    <option value="4to Año">4to Año</option>
-                    <option value="5to Año">5to Año</option>
-                </select>
+                <label>Contraseña:</label>
+                <input type="password" name="password" class="form-control" required placeholder="Tu contraseña">
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Comenzar</button>
+            <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
         </form>
     </div>
     
     <div class="mt-4">
-        <a href="{{ url_for('profesor') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-user-tie"></i> Acceso Profesores</a>
+        <p>¿No tienes cuenta? <a href="{{ url_for('register') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-user-plus"></i> Regístrate aquí</a></p>
     </div>
 </div>
 {% endblock %}

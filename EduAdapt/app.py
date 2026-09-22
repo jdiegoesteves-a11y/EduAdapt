@@ -16,17 +16,78 @@ quiz = Quiz(json_path)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        nombre = request.form.get('nombre')
-        curso = request.form.get('curso')
-        if not nombre or not curso:
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if not username or not password:
             flash("Por favor completa todos los campos.")
             return redirect(url_for('index'))
             
-        usuario_id = db.get_or_create_user(nombre, curso)
-        session['usuario_id'] = usuario_id
-        session['nombre'] = nombre
-        return redirect(url_for('menu'))
+        user = db.verify_login(username, password)
+        if user:
+            if user['rol'] == 'ESTUDIANTE' and user['aprobado'] == 0:
+                flash("Tu cuenta de estudiante está pendiente de aprobación por un profesor/admin.")
+                return redirect(url_for('index'))
+                
+            session['usuario_id'] = user['id']
+            session['nombre'] = user['nombre']
+            session['rol'] = user['rol']
+            
+            if user['rol'] == 'ADMIN':
+                return redirect(url_for('admin_dashboard'))
+            elif user['rol'] == 'PROFESOR':
+                return redirect(url_for('profesor'))
+            else:
+                return redirect(url_for('menu'))
+        else:
+            flash("Usuario o contraseña incorrectos.")
+            return redirect(url_for('index'))
+            
     return render_template('index.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        curso = request.form.get('curso', '')
+        username = request.form.get('username')
+        password = request.form.get('password')
+        rol = request.form.get('rol') # 'ESTUDIANTE' o 'PROFESOR'
+        
+        if not all([nombre, username, password, rol]):
+            flash("Por favor completa los campos obligatorios.")
+            return redirect(url_for('register'))
+            
+        if rol == 'ESTUDIANTE' and not curso:
+            flash("Los estudiantes deben especificar un curso.")
+            return redirect(url_for('register'))
+            
+        success, msg = db.register_user(nombre, curso, username, password, rol)
+        if success:
+            if rol == 'ESTUDIANTE':
+                flash("Registro exitoso. Debes esperar a que un administrador apruebe tu cuenta.")
+            else:
+                flash("Registro exitoso. Ya puedes iniciar sesión.")
+            return redirect(url_for('index'))
+        else:
+            flash(msg)
+            return redirect(url_for('register'))
+            
+    return render_template('register.html')
+
+@app.route('/admin')
+def admin_dashboard():
+    if session.get('rol') != 'ADMIN':
+        return redirect(url_for('index'))
+    pendientes = db.get_pending_students()
+    return render_template('admin.html', pendientes=pendientes)
+
+@app.route('/approve/<int:user_id>', methods=['POST'])
+def approve(user_id):
+    if session.get('rol') != 'ADMIN':
+        return jsonify({"error": "No autorizado"}), 403
+    db.approve_student(user_id)
+    return redirect(url_for('admin_dashboard'))
 
 @app.route('/menu')
 def menu():
@@ -179,6 +240,8 @@ def progreso():
 
 @app.route('/profesor')
 def profesor():
+    if session.get('rol') not in ['PROFESOR', 'ADMIN']:
+        return redirect(url_for('index'))
     # Obtener los datos de todos los estudiantes
     resultados = db.get_all_student_results()
     stats = db.get_general_statistics()

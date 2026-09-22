@@ -23,7 +23,11 @@ class Database:
             CREATE TABLE IF NOT EXISTS usuarios (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombre TEXT NOT NULL,
-                curso TEXT NOT NULL
+                curso TEXT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                rol TEXT NOT NULL,
+                aprobado INTEGER DEFAULT 0
             )
         ''')
         
@@ -39,20 +43,52 @@ class Database:
                 FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
             )
         ''')
+        
+        # Insertar ADMIN por defecto
+        cursor.execute("SELECT id FROM usuarios WHERE username = 'ADMIN'")
+        if not cursor.fetchone():
+            cursor.execute('''
+                INSERT INTO usuarios (nombre, curso, username, password, rol, aprobado) 
+                VALUES ('Administrador', '', 'ADMIN', 'ADMIN', 'ADMIN', 1)
+            ''')
+            
         self.conn.commit()
 
-    def get_or_create_user(self, nombre, curso):
-        """Busca al usuario por nombre y curso, si no existe lo crea."""
+    def register_user(self, nombre, curso, username, password, rol):
+        """Registra un nuevo usuario."""
         cursor = self.conn.cursor()
-        cursor.execute('SELECT id FROM usuarios WHERE nombre = ? AND curso = ?', (nombre, curso))
+        try:
+            aprobado = 1 if rol == 'PROFESOR' else 0 # Profesores pre-aprobados, estudiantes no.
+            cursor.execute('''
+                INSERT INTO usuarios (nombre, curso, username, password, rol, aprobado) 
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (nombre, curso, username, password, rol, aprobado))
+            self.conn.commit()
+            return True, "Registro exitoso."
+        except sqlite3.IntegrityError:
+            return False, "El nombre de usuario ya existe."
+
+    def verify_login(self, username, password):
+        """Verifica las credenciales y devuelve el usuario si es correcto."""
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT id, nombre, rol, aprobado FROM usuarios WHERE username = ? AND password = ?', (username, password))
         row = cursor.fetchone()
-        
         if row:
-            return row[0] # Retorna ID existente
-            
-        cursor.execute('INSERT INTO usuarios (nombre, curso) VALUES (?, ?)', (nombre, curso))
+            return {"id": row[0], "nombre": row[1], "rol": row[2], "aprobado": row[3]}
+        return None
+
+    def get_pending_students(self):
+        """Obtiene estudiantes pendientes de aprobación."""
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT id, nombre, curso, username FROM usuarios WHERE rol = 'ESTUDIANTE' AND aprobado = 0")
+        rows = cursor.fetchall()
+        return [{"id": r[0], "nombre": r[1], "curso": r[2], "username": r[3]} for r in rows]
+
+    def approve_student(self, user_id):
+        """Aprueba a un estudiante."""
+        cursor = self.conn.cursor()
+        cursor.execute("UPDATE usuarios SET aprobado = 1 WHERE id = ?", (user_id,))
         self.conn.commit()
-        return cursor.lastrowid
         
     def save_result(self, usuario_id, materia, porcentaje_general, resultados_tema):
         """Guarda los resultados del diagnostico en la base de datos."""
