@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center mb-4">
+    <h2 class="title">Recursos y Materiales Educativos</h2>
+    <p class="subtitle">Guías teóricas, fórmulas clave y ejercicios resueltos paso a paso</p>
+</div>
+
+<div class="row mb-4">
+    <div class="card p-3 mx-auto" style="max-width: 850px; width: 100%;">
+        <div class="grid-2-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group mb-0">
+                <label for="selectMateriaMaterial"><strong>1. Selecciona Materia o Área:</strong></label>
+                <select id="selectMateriaMaterial" class="form-control" onchange="onMateriaChange()">
+                    <option value="">Seleccione una materia...</option>
+                    {% for mat in materias %}
+                    <option value="{{ mat }}" {% if materia_req == mat %}selected{% endif %}>{{ mat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group mb-0">
+                <label for="selectTemaMaterial"><strong>2. Selecciona Tema / Recurso:</strong></label>
+                <select id="selectTemaMaterial" class="form-control" onchange="onTemaChange()">
+                    <option value="">Seleccione un tema...</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenedor del Visor de Material -->
+<div id="materialContentCard" class="card mx-auto p-4" style="max-width: 850px; display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-3" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e5e7eb; padding-bottom: 1rem;">
+        <div>
+            <span id="matNivelBadge" class="badge badge-success mb-2" style="font-size: 0.85rem; padding: 4px 10px; border-radius: 6px;"></span>
+            <h2 id="matTitulo" style="color: var(--primary); margin: 0.25rem 0;"></h2>
+            <p id="matMateriaTema" class="text-muted" style="margin: 0; font-size: 0.95rem;"></p>
+        </div>
+        <a id="btnPracticarTema" href="#" class="btn btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.95rem;">
+            <i class="fas fa-pencil-alt"></i> Practicar este tema
+        </a>
+    </div>
+
+    <!-- Resumen Teórico -->
+    <div class="mb-4">
+        <h4 style="color: #374151; margin-bottom: 0.5rem;"><i class="fas fa-book-open"></i> Resumen Conceptual</h4>
+        <p id="matResumen" style="line-height: 1.6; font-size: 1.05rem; background: #f9fafb; padding: 1rem; border-left: 4px solid var(--primary); border-radius: 4px;"></p>
+    </div>
+
+    <!-- Fórmulas y Conceptos Clave -->
+    <div class="mb-4">
+        <h4 style="color: #374151; margin-bottom: 0.5rem;"><i class="fas fa-square-root-alt"></i> Fórmulas y Propiedades Clave</h4>
+        <ul id="matFormulasList" style="list-style: none; padding-left: 0;">
+            <!-- Rellenado por JS -->
+        </ul>
+    </div>
+
+    <!-- Pasos de Resolución -->
+    <div class="mb-4">
+        <h4 style="color: #374151; margin-bottom: 0.5rem;"><i class="fas fa-list-ol"></i> Estrategia y Pasos de Resolución</h4>
+        <ol id="matPasosList" style="padding-left: 1.5rem; line-height: 1.8; color: #4b5563;">
+            <!-- Rellenado por JS -->
+        </ol>
+    </div>
+
+    <!-- Ejemplo Práctico -->
+    <div class="card p-3" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
+        <h4 style="color: #166534; margin-top: 0;"><i class="fas fa-check-circle"></i> Ejemplo Práctico Resuelto</h4>
+        <p><strong>Enunciado:</strong> <span id="matEjemploEnunciado"></span></p>
+        <p style="white-space: pre-line;"><strong>Desarrollo:</strong><br><span id="matEjemploDesarrollo" style="color: #1f2937;"></span></p>
+        <div style="background: #ffffff; padding: 0.75rem; border-radius: 6px; border: 1px dashed #86efac;">
+            <strong style="color: #15803d;">Conclusión:</strong> <span id="matEjemploConclusion"></span>
+        </div>
+    </div>
+</div>
+
+<div id="materialEmptyState" class="text-center p-5 card mx-auto" style="max-width: 850px;">
+    <p class="text-muted" style="font-size: 1.1rem;">Selecciona una materia y un tema educativo para visualizar su guía completa de estudio.</p>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{{ url_for('menu') }}" class="btn btn-outline">Volver al Menú Principal</a>
+</div>
+
+<script>
+let materiaActual = "{{ materia_req or '' }}";
+let temaActual = "{{ tema_req or '' }}";
+
+async function onMateriaChange() {
+    const materiaSelect = document.getElementById('selectMateriaMaterial');
+    materiaActual = materiaSelect.value;
+    const temaSelect = document.getElementById('selectTemaMaterial');
+    
+    if (!materiaActual) {
+        temaSelect.innerHTML = '<option value="">Seleccione una materia primero...</option>';
+        temaSelect.disabled = true;
+        hideMaterial();
+        return;
+    }
+    
+    temaSelect.disabled = true;
+    temaSelect.innerHTML = '<option value="">Cargando temas...</option>';
+    
+    try {
+        const res = await fetch(`/api/materiales/temas?materia=${encodeURIComponent(materiaActual)}`);
+        const temas = await res.json();
+        
+        temaSelect.innerHTML = '<option value="">Seleccione un tema...</option>';
+        temas.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t;
+            opt.textContent = t;
+            if (t === temaActual) opt.selected = true;
+            temaSelect.appendChild(opt);
+        });
+        
+        temaSelect.disabled = false;
+        
+        if (temaActual && temas.includes(temaActual)) {
+            temaSelect.value = temaActual;
+            loadMaterialDetalle(materiaActual, temaActual);
+        } else if (temas.length > 0) {
+            temaActual = temas[0];
+            temaSelect.value = temaActual;
+            loadMaterialDetalle(materiaActual, temaActual);
+        } else {
+            hideMaterial();
+        }
+    } catch (e) {
+        console.error("Error al cargar temas de material:", e);
+        temaSelect.innerHTML = '<option value="">Error cargando temas</option>';
+    }
+}
+
+async function onTemaChange() {
+    const temaSelect = document.getElementById('selectTemaMaterial');
+    temaActual = temaSelect.value;
+    if (materiaActual && temaActual) {
+        loadMaterialDetalle(materiaActual, temaActual);
+    } else {
+        hideMaterial();
+    }
+}
+
+async function loadMaterialDetalle(materia, tema) {
+    if (!materia || !tema) return;
+    
+    // Actualizar URL sin recargar para persistir la selección en caso de refresco o retroceso
+    const url = new URL(window.location);
+    url.searchParams.set('materia', materia);
+    url.searchParams.set('tema', tema);
+    window.history.replaceState({}, '', url);
+
+    try {
+        const res = await fetch(`/api/materiales/detalle?materia=${encodeURIComponent(materia)}&tema=${encodeURIComponent(tema)}`);
+        if (!res.ok) throw new Error("No encontrado");
+        const mat = await res.json();
+        renderMaterial(mat);
+    } catch (e) {
+        console.error("Error cargando detalle:", e);
+        hideMaterial();
+    }
+}
+
+function renderMaterial(mat) {
+    document.getElementById('matTitulo').innerText = mat.titulo;
+    document.getElementById('matMateriaTema').innerText = `${mat.materia} • ${mat.tema}`;
+    document.getElementById('matNivelBadge').innerText = mat.nivel || 'Estudio';
+    document.getElementById('matResumen').innerText = mat.resumen;
+    
+    // Fórmulas
+    const formulasList = document.getElementById('matFormulasList');
+    formulasList.innerHTML = '';
+    (mat.formulas_clave || []).forEach(f => {
+        const li = document.createElement('li');
+        li.style.background = '#eef2ff';
+        li.style.padding = '0.6rem 1rem';
+        li.style.marginBottom = '0.5rem';
+        li.style.borderRadius = '6px';
+        li.style.color = '#3730a3';
+        li.style.fontWeight = '600';
+        li.innerHTML = `<i class="fas fa-check text-primary" style="margin-right: 8px;"></i> ${f}`;
+        formulasList.appendChild(li);
+    });
+    
+    // Pasos
+    const pasosList = document.getElementById('matPasosList');
+    pasosList.innerHTML = '';
+    (mat.pasos_resolucion || []).forEach(p => {
+        const li = document.createElement('li');
+        li.innerText = p;
+        pasosList.appendChild(li);
+    });
+    
+    // Ejemplo
+    if (mat.ejemplo_practico) {
+        document.getElementById('matEjemploEnunciado').innerText = mat.ejemplo_practico.enunciado || '';
+        document.getElementById('matEjemploDesarrollo').innerText = mat.ejemplo_practico.desarrollo || '';
+        document.getElementById('matEjemploConclusion').innerText = mat.ejemplo_practico.conclusion || '';
+    }
+    
+    // Botón Practicar
+    document.getElementById('btnPracticarTema').href = `/practica?materia=${encodeURIComponent(mat.materia)}&tema=${encodeURIComponent(mat.tema)}`;
+    
+    document.getElementById('materialContentCard').style.display = 'block';
+    document.getElementById('materialEmptyState').style.display = 'none';
+}
+
+function hideMaterial() {
+    document.getElementById('materialContentCard').style.display = 'none';
+    document.getElementById('materialEmptyState').style.display = 'block';
+}
+
+// Inicialización automática
+window.addEventListener('DOMContentLoaded', () => {
+    if (materiaActual) {
+        onMateriaChange();
+    }
+});
+</script>
+{% endblock %}

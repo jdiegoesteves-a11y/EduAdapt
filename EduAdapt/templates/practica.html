@@ -51,6 +51,7 @@ let preguntasPractica = [];
 let indicePractica = 0;
 let aciertosPractica = 0;
 let seleccionActual = null;
+let respuestasPractica = [];
 
 async function loadTemas() {
     const materia = document.getElementById('materiaSelect').value;
@@ -92,6 +93,7 @@ async function startPractica() {
     
     indicePractica = 0;
     aciertosPractica = 0;
+    respuestasPractica = [];
     document.getElementById('practicaContainer').style.display = 'block';
     showPreguntaPractica();
 }
@@ -132,9 +134,11 @@ function verificarRespuesta() {
         fbTitle.innerText = "¡Correcto!";
         fbTitle.style.color = "#27ae60";
         aciertosPractica++;
+        respuestasPractica.push({ fue_correcta: true });
     } else {
         fbTitle.innerText = `Incorrecto. La respuesta era: ${pregunta.opciones[pregunta.respuesta]}`;
         fbTitle.style.color = "#c0392b";
+        respuestasPractica.push({ fue_correcta: false });
     }
     
     document.getElementById('feedbackExplicacion').innerText = pregunta.explicacion;
@@ -146,7 +150,7 @@ function verificarRespuesta() {
     }
 }
 
-function nextPractica() {
+async function nextPractica() {
     indicePractica++;
     if (indicePractica < preguntasPractica.length) {
         showPreguntaPractica();
@@ -154,6 +158,28 @@ function nextPractica() {
         const porc = (aciertosPractica / preguntasPractica.length) * 100;
         alert(`¡Práctica finalizada!\nAciertos: ${aciertosPractica}/${preguntasPractica.length} (${porc}%)`);
         document.getElementById('practicaContainer').style.display = 'none';
+        
+        // Guardar progreso en el backend
+        const materia = document.getElementById('materiaSelect').value;
+        const tema = document.getElementById('temaSelect').value;
+        
+        try {
+            await fetch('/api/guardar_practica', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    materia: materia,
+                    tema: tema,
+                    respuestas: respuestasPractica
+                })
+            });
+            // Opcional: Redirigir a progreso o dejar que el usuario siga practicando
+            // window.location.href = '/progreso';
+        } catch(e) {
+            console.error("Error al guardar la práctica", e);
+        }
     }
 }
 </script>

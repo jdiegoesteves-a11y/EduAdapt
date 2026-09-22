@@ -1,0 +1,225 @@
+[
+    {
+        "id": "mat-ecuaciones",
+        "materia": "Matemáticas",
+        "tema": "Ecuaciones",
+        "titulo": "Guía Maestra: Resolución de Ecuaciones Lineales",
+        "nivel": "Básico",
+        "resumen": "Una ecuación lineal es una igualdad algebraica donde la variable tiene exponente 1. El objetivo principal es aislar la incógnita aplicando operaciones inversas en ambos miembros de la ecuación.",
+        "formulas_clave": [
+            "Forma canónica: ax + b = c ⇒ ax = c - b ⇒ x = (c - b) / a",
+            "Propiedad uniforme de la igualdad: Si a = b, entonces a ± c = b ± c",
+            "Propiedad multiplicativa: Si a = b y c ≠ 0, entonces a · c = b · c"
+        ],
+        "pasos_resolucion": [
+            "Paso 1: Eliminar paréntesis aplicando la propiedad distributiva si los hay.",
+            "Paso 2: Quitar denominadores multiplicando por el mínimo común múltiplo (m.c.m.).",
+            "Paso 3: Agrupar todos los términos con incógnita en un miembro y los números en el otro.",
+            "Paso 4: Reducir términos semejantes.",
+            "Paso 5: Despejar la incógnita y comprobar la solución sustituyendo en la ecuación original."
+        ],
+        "ejemplo_practico": {
+            "enunciado": "Resolver la ecuación: 3(x - 2) + 4 = 2x + 7",
+            "desarrollo": "1) Aplicar distributiva: 3x - 6 + 4 = 2x + 7\n2) Simplificar: 3x - 2 = 2x + 7\n3) Transponer términos: 3x - 2x = 7 + 2\n4) Reducir: x = 9",
+            "conclusion": "La solución única es x = 9. Al sustituir: 3(9-2)+4 = 3(7)+4 = 25 y 2(9)+7 = 25. ¡Correcto!"
+        }
+    },
+    {
+        "id": "mat-funciones",
+        "materia": "Matemáticas",
+        "tema": "Funciones",
+        "titulo": "Fundamentos y Análisis de Funciones",
+        "nivel": "Básico",
+        "resumen": "Una función f es una relación entre un conjunto dominio (X) y un codominio (Y), de modo que a cada elemento de X le corresponde un único elemento de Y.",
+        "formulas_clave": [
+            "Función lineal: f(x) = mx + b (m = pendiente, b = ordenada al origen)",
+            "Pendiente entre dos puntos: m = (y₂ - y₁) / (x₂ - x₁)",
+            "Función cuadrática básica: f(x) = ax² + bx + c"
+        ],
+        "pasos_resolucion": [
+            "Paso 1: Identificar el dominio natural restringiendo divisiones por cero y raíces de índice par negativas.",
+            "Paso 2: Determinar los puntos de corte con los ejes (Corte Y: f(0); Corte X: resolver f(x) = 0).",
+            "Paso 3: Analizar intervalos de crecimiento, decrecimiento y signos de la función.",
+            "Paso 4: Esbozar la gráfica mediante una tabla de valores clave o transformaciones elementales."
+        ],
+        "ejemplo_practico": {
+            "enunciado": "Determinar el dominio y el corte con el eje Y de f(x) = 2x - 6.",
+            "desarrollo": "1) Dominio: Como es un polinomio de grado 1, Dom(f) = ℝ.\n2) Corte con el eje Y (x=0): f(0) = 2(0) - 6 = -6 ⇒ Punto (0, -6).\n3) Corte con el eje X (y=0): 2x - 6 = 0 ⇒ 2x = 6 ⇒ x = 3 ⇒ Punto (3, 0).",
+            "conclusion": "La gráfica es una recta ascendente con pendiente m=2 que corta en (3, 0) y (0, -6)."
+        }
+    },
+    {
+        "id": "mat-factorizacion",
+        "materia": "Matemáticas",
+        "tema": "Factorización",
+        "titulo": "Métodos Esenciales de Factorización Algebraica",
+        "nivel": "Básico",
+        "resumen": "Factorizar consiste en transformar una suma o resta de expresiones algebraicas en un producto equivalente de factores primos.",
+        "formulas_clave": [
+            "Factor Común: ax + ay = a(x + y)",
+            "Diferencia de Cuadrados: a² - b² = (a + b)(a - b)",
+            "Trinomio Cuadrado Perfecto: a² ± 2ab + b² = (a ± b)²",
+            "Trinomio de la forma: x² + (p+q)x + pq = (x + p)(x + q)"
+        ],
+        "pasos_resolucion": [
+            "Paso 1: Extraer siempre el Máximo Común Divisor (factor común numérico y literal).",
+            "Paso 2: Contar el número de términos (2 términos: revisar diferencia de cuadrados o cubos; 3 términos: trinomio; 4 o más: agrupación).",
+            "Paso 3: Aplicar el producto notable correspondiente.",
+            "Paso 4: Verificar multiplicando los factores para comprobar que se obtiene el polinomio inicial."
+        ],
+        "ejemplo_practico": {
+            "enunciado": "Factorizar completamente: 4x² - 16",
+            "desarrollo": "1) Extraer factor común 4: 4(x² - 4)\n2) Reconocer diferencia de cuadrados en el paréntesis: x² - 2² = (x + 2)(x - 2)\n3) Producto final: 4(x + 2)(x - 2)",
+            "conclusion": "La expresión queda factorizada en sus factores lineales irreducibles: 4(x + 2)(x - 2)."
+        }
+    },
+    {
+        "id": "fis-movimiento",
+        "materia": "Física",
+        "tema": "Movimiento",
+        "titulo": "Cinemática: MRU y MRUA en una Dimensión",
+        "nivel": "Básico",
+        "resumen": "La cinemática describe el movimiento de los cuerpos en el espacio en función del tiempo, sin considerar las causas que lo originan.",
+        "formulas_clave": [
+            "MRU (Velocidad constante): d = v · t",
+            "MRUA - Velocidad final: v_f = v_0 + a · t",
+            "MRUA - Posición: d = v_0 · t + 0.5 · a · t²",
+            "MRUA - Ecuación independiente del tiempo: v_f² = v_0² + 2 · a · d"
+        ],
+        "pasos_resolucion": [
+            "Paso 1: Dibujar un esquema y definir el sistema de referencia con el sentido positivo.",
+            "Paso 2: Extraer datos conocidos e incógnitas expresándolos en unidades del Sistema Internacional (m, s, m/s, m/s²).",
+            "Paso 3: Seleccionar la ecuación cinemática que relacione los datos dados con la incógnita.",
+            "Paso 4: Despejar y verificar la coherencia dimensional del resultado."
+        ],
+        "ejemplo_practico": {
+            "enunciado": "Un automóvil parte del reposo (v₀ = 0) y acelera a razón constante de 3 m/s² durante 4 segundos. ¿Qué distancia recorre?",
+            "desarrollo": "1) Datos: v₀ = 0, a = 3 m/s², t = 4 s, d = ?\n2) Ecuación: d = v₀·t + 0.5·a·t²\n3) Sustitución: d = 0 + 0.5 · (3) · (4)² = 1.5 · 16 = 24 metros.",
+            "conclusion": "El móvil recorre 24 metros en los primeros 4 segundos de aceleración."
+        }
+    },
+    {
+        "id": "fis-fuerza",
+        "materia": "Física",
+        "tema": "Fuerza",
+        "titulo": "Dinámica Clásica y Leyes de Newton",
+        "nivel": "Básico",
+        "resumen": "La dinámica analiza las causas que modifican el estado de reposo o movimiento de los objetos, fundamentada en las tres leyes de Sir Isaac Newton.",
+        "formulas_clave": [
+            "Segunda Ley de Newton: ΣF = m · a",
+            "Fuerza de Peso: P = m · g (g ≈ 9.8 m/s²)",
+            "Fuerza de Fricción dinámica: f_k = μ_k · N"
+        ],
+        "pasos_resolucion": [
+            "Paso 1: Aislar el cuerpo y construir su Diagrama de Cuerpo Libre (DCL).",
+            "Paso 2: Descomponer todas las fuerzas en los ejes cartesianos (X e Y).",
+            "Paso 3: Aplicar ΣF_y = 0 para equilibrio vertical y ΣF_x = m · a para el movimiento horizontal.",
+            "Paso 4: Resolver el sistema de ecuaciones resultante."
+        ],
+        "ejemplo_practico": {
+            "enunciado": "Se empuja una caja de 10 kg con una fuerza neta de 40 N sobre una superficie sin fricción. Calcula su aceleración.",
+            "desarrollo": "1) Datos: m = 10 kg, F_neta = 40 N\n2) Ley: F = m · a ⇒ a = F / m\n3) Cálculo: a = 40 N / 10 kg = 4 m/s²",
+            "conclusion": "La caja acelera a 4 m/s² en la dirección de la fuerza aplicada."
+        }
+    },
+    {
+        "id": "bio-celulas",
+        "materia": "Biología",
+        "tema": "Células",
+        "titulo": "Teoría Celular y Organización Estructural",
+        "nivel": "Básico",
+        "resumen": "La célula es la unidad morfológica, fisiológica y genética de todos los seres vivos. Se dividen fundamentalmente en procariotas (sin núcleo) y eucariotas (con núcleo delimitado).",
+        "formulas_clave": [
+            "Postulados de la Teoría Celular (Schleiden, Schwann y Virchow)",
+            "Respiración Celular: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + 36-38 ATP (Mitocondria)",
+            "Fotosíntesis: 6CO₂ + 6H₂O + Luz → C₆H₁₂O₆ + 6O₂ (Cloroplasto)"
+        ],
+        "pasos_resolucion": [
+            "Paso 1: Diferenciar organelos membranosos (núcleo, mitocondria, retículo endoplasmático) de no membranosos (ribosomas).",
+            "Paso 2: Distinguir entre célula vegetal (pared celulósica, vacuola central, cloroplastos) y célula animal (centriolos, lisosomas).",
+            "Paso 3: Relacionar la función de síntesis proteica con ribosomas y producción de energía con mitocondrias."
+        ],
+        "ejemplo_practico": {
+            "enunciado": "¿Qué organelo es responsable de suministrar la mayor parte de la energía que la célula necesita para sus procesos vitales?",
+            "desarrollo": "Las mitocondrias realizan la respiración celular aeróbica, oxidando carbohidratos para producir trifosfato de adenosina (ATP).",
+            "conclusion": "La mitocondria es comúnmente llamada la 'central eléctrica' de la célula eucariota."
+        }
+    },
+    {
+        "id": "adv-mat-alg-cuadraticas",
+        "materia": "📚 Temas avanzados",
+        "tema": "Ecuaciones cuadráticas",
+        "titulo": "Ecuaciones Cuadráticas, Discriminante y Raíces Complejas",
+        "nivel": "2do BGU",
+        "resumen": "Estudio avanzado de ecuaciones de segundo grado de la forma ax² + bx + c = 0, su discriminante, propiedades de las raíces (fórmulas de Vieta) y representación parabólica.",
+        "formulas_clave": [
+            "Fórmula General: x = (-b ± √(b² - 4ac)) / (2a)",
+            "Discriminante: Δ = b² - 4ac",
+            "Si Δ > 0: Dos raíces reales distintas",
+            "Si Δ = 0: Raíz real doble (x = -b / 2a)",
+            "Si Δ < 0: Dos raíces complejas conjugadas",
+            "Fórmulas de Vieta: x₁ + x₂ = -b/a,  x₁ · x₂ = c/a"
+        ],
+        "pasos_resolucion": [
+            "Paso 1: Ordenar la ecuación en forma estándar ax² + bx + c = 0.",
+            "Paso 2: Calcular el discriminante Δ para anticipar la naturaleza de las soluciones.",
+            "Paso 3: Aplicar factorización o la fórmula general cuadrática.",
+            "Paso 4: Escribir el conjunto solución S = {x₁, x₂} verificando con las relaciones de Vieta."
+        ],
+        "ejemplo_practico": {
+            "enunciado": "Hallar las soluciones de 2x² - 4x + 5 = 0.",
+            "desarrollo": "1) a = 2, b = -4, c = 5\n2) Δ = (-4)² - 4(2)(5) = 16 - 40 = -24 < 0 (Soluciones complejas)\n3) x = (4 ± √(-24)) / 4 = (4 ± 2i√6) / 4 = 1 ± (√6 / 2) i",
+            "conclusion": "Las raíces son los números complejos conjugados x₁ = 1 + (√6/2)i y x₂ = 1 - (√6/2)i."
+        }
+    },
+    {
+        "id": "adv-mat-calc-derivadas",
+        "materia": "📚 Temas avanzados",
+        "tema": "Introducción a derivadas",
+        "titulo": "Cálculo Diferencial: Concepto e Interpretación Geométrica",
+        "nivel": "2do BGU",
+        "resumen": "La derivada mide la rapidez con la que cambia el valor de una función matemática según cambie el valor de su variable independiente. Geométricamente representa la pendiente de la recta tangente a la curva en un punto.",
+        "formulas_clave": [
+            "Definición por límite: f'(x) = lim(h→0) [f(x + h) - f(x)] / h",
+            "Regla de la potencia: d/dx [xⁿ] = n · xⁿ⁻¹",
+            "Regla del múltiplo constante: d/dx [c · f(x)] = c · f'(x)",
+            "Ecuación de la recta tangente en x = a: y - f(a) = f'(a)(x - a)"
+        ],
+        "pasos_resolucion": [
+            "Paso 1: Evaluar f(a) para obtener el punto de tangencia (a, f(a)).",
+            "Paso 2: Derivar la función aplicando las reglas básicas para obtener f'(x).",
+            "Paso 3: Evaluar f'(a) para encontrar la pendiente m de la recta tangente.",
+            "Paso 4: Construir la ecuación de la recta tangente con la forma punto-pendiente."
+        ],
+        "ejemplo_practico": {
+            "enunciado": "Encontrar la ecuación de la recta tangente a la curva f(x) = x² + 2x en el punto donde x = 1.",
+            "desarrollo": "1) Punto de tangencia: f(1) = 1² + 2(1) = 3 ⇒ Punto (1, 3)\n2) Derivada: f'(x) = 2x + 2\n3) Pendiente m: f'(1) = 2(1) + 2 = 4\n4) Recta tangente: y - 3 = 4(x - 1) ⇒ y - 3 = 4x - 4 ⇒ y = 4x - 1",
+            "conclusion": "La recta tangente a la parábola en (1, 3) tiene por ecuación y = 4x - 1."
+        }
+    },
+    {
+        "id": "adv-mat-trig-identidades",
+        "materia": "📚 Temas avanzados",
+        "tema": "Identidades trigonométricas",
+        "titulo": "Identidades Trigonométricas Fundamentales y Demostraciones",
+        "nivel": "2do BGU",
+        "resumen": "Una identidad trigonométrica es una igualdad que vincula dos funciones trigonométricas y es válida para todos los valores del ángulo en los que están definidas las funciones.",
+        "formulas_clave": [
+            "Identidad Pitagórica: sen²(θ) + cos²(θ) = 1",
+            "Formas derivadas: 1 + tan²(θ) = sec²(θ)  y  1 + cot²(θ) = csc²(θ)",
+            "Identidades por cociente: tan(θ) = sen(θ)/cos(θ),  cot(θ) = cos(θ)/sen(θ)",
+            "Identidades recíprocas: csc(θ) = 1/sen(θ),  sec(θ) = 1/cos(θ)"
+        ],
+        "pasos_resolucion": [
+            "Paso 1: Elegir el miembro más complejo de la igualdad para iniciar la demostración.",
+            "Paso 2: Expresar todas las razones trigonométricas en términos de seno y coseno cuando sea conveniente.",
+            "Paso 3: Efectuar operaciones algebraicas (sumar fracciones, factorizar, simplificar).",
+            "Paso 4: Aplicar identidades pitagóricas para llegar exactamente al otro miembro de la igualdad."
+        ],
+        "ejemplo_practico": {
+            "enunciado": "Demostrar que tan(x) + cot(x) = sec(x) · csc(x).",
+            "desarrollo": "1) Lado izquierdo en sen y cos: sen(x)/cos(x) + cos(x)/sen(x)\n2) Denominador común: [sen²(x) + cos²(x)] / [sen(x)cos(x)]\n3) Aplicar sen²(x) + cos²(x) = 1: 1 / [sen(x)cos(x)]\n4) Separar factores: (1/cos(x)) · (1/sen(x)) = sec(x) · csc(x)",
+            "conclusion": "Queda demostrada la identidad para todo x ≠ kπ/2."
+        }
+    }
+]

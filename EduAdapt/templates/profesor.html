@@ -67,39 +67,56 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h4><i class="fas fa-list-alt"></i> Resultados Recientes de Estudiantes</h4>
+        <h4><i class="fas fa-users"></i> Listado de Estudiantes</h4>
         <div class="table-responsive">
             <table class="table table-hover mt-3">
                 <thead class="table-primary">
                     <tr>
                         <th>Nombre</th>
-                        <th>Curso</th>
-                        <th>Materia</th>
-                        <th>Porcentaje</th>
-                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Última Actividad</th>
+                        <th>Progreso General</th>
+                        <th>Precisión</th>
+                        <th>Tareas</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for res in resultados %}
+                    {% for est in estudiantes %}
                     <tr>
-                        <td><strong>{{ res[0] }}</strong></td>
-                        <td>{{ res[1] }}</td>
-                        <td>{{ res[2] }}</td>
                         <td>
-                            <div class="progress" style="height: 25px;">
-                                <div class="progress-bar {% if res[3] >= 80 %}bg-success{% elif res[3] >= 60 %}bg-warning text-dark{% else %}bg-danger{% endif %}" 
+                            <strong>{{ est.nombre }}</strong><br>
+                            <small class="text-muted">{{ est.curso }} | @{{ est.username }}</small>
+                        </td>
+                        <td>
+                            {% if est.en_linea %}
+                            <span class="badge bg-success">En línea</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Desconectado</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small>{{ est.ultima_actividad }}</small>
+                        </td>
+                        <td>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar {% if est.progreso_total >= 80 %}bg-success{% elif est.progreso_total >= 60 %}bg-warning text-dark{% else %}bg-danger{% endif %}" 
                                      role="progressbar" 
-                                     style="width: {{ res[3] }}%;" 
-                                     aria-valuenow="{{ res[3] }}" aria-valuemin="0" aria-valuemax="100">
-                                    {{ res[3]|round(1) }}%
+                                     style="width: {{ est.progreso_total }}%;" 
+                                     aria-valuenow="{{ est.progreso_total }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ est.progreso_total|round(1) }}%
                                 </div>
                             </div>
                         </td>
-                        <td><small class="text-muted">{{ res[4] }}</small></td>
+                        <td>{{ est.precision }}%</td>
+                        <td>{{ est.tareas_completadas }} ({{ est.porcentaje_tareas }}%)</td>
+                        <td>
+                            <a href="{{ url_for('profesor_estudiante', estudiante_id=est.id) }}" class="btn btn-sm btn-info">Ver Detalle</a>
+                        </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="5" class="text-center text-muted">No hay diagnósticos registrados.</td>
+                        <td colspan="7" class="text-center text-muted">No hay estudiantes activos registrados.</td>
                     </tr>
                     {% endfor %}
                 </tbody>

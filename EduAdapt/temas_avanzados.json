@@ -1,0 +1,610 @@
+[
+    {
+        "id": "adv-alg-01",
+        "nombre": "Ecuaciones cuadráticas",
+        "nivel": "2do BGU",
+        "categoria": "Álgebra",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuáles son las soluciones de x² - 5x + 6 = 0?",
+                "opciones": ["x = 2 y x = 3", "x = -2 y x = -3", "x = 1 y x = 6", "x = -1 y x = 5"],
+                "respuesta": 0,
+                "explicacion": "Factorizando (x - 2)(x - 3) = 0 obtenemos x = 2 y x = 3."
+            },
+            {
+                "pregunta": "¿Qué indica un discriminante Δ = b² - 4ac < 0 en ax² + bx + c = 0?",
+                "opciones": ["Dos soluciones reales iguales", "Dos soluciones complejas/imaginarias", "Una única solución real", "Infinitas soluciones reales"],
+                "respuesta": 1,
+                "explicacion": "Si el discriminante es negativo, la parábola no corta el eje X y las raíces son complejas conjugadas."
+            },
+            {
+                "pregunta": "Determina las raíces de 2x² - 8 = 0",
+                "opciones": ["x = ±4", "x = ±2", "x = 2 únicamente", "x = 0"],
+                "respuesta": 1,
+                "explicacion": "2x² = 8 ⇒ x² = 4 ⇒ x = ±2."
+            }
+        ]
+    },
+    {
+        "id": "adv-alg-02",
+        "nombre": "Sistemas de ecuaciones",
+        "nivel": "2do BGU",
+        "categoria": "Álgebra",
+        "preguntas": [
+            {
+                "pregunta": "Resuelve el sistema: x + y = 10 y x - y = 4",
+                "opciones": ["x = 7, y = 3", "x = 6, y = 4", "x = 8, y = 2", "x = 5, y = 5"],
+                "respuesta": 0,
+                "explicacion": "Sumando ambas ecuaciones: 2x = 14 ⇒ x = 7; luego y = 10 - 7 = 3."
+            },
+            {
+                "pregunta": "Si en un sistema 2x2 el determinante del sistema es cero y los determinantes de las incógnitas también son cero, el sistema es:",
+                "opciones": ["Compatible determinado (solución única)", "Incompatible (sin solución)", "Compatible indeterminado (infinitas soluciones)", "No lineal"],
+                "respuesta": 2,
+                "explicacion": "Por la Regla de Cramer, si det(A) = 0 y det(Ax) = det(Ay) = 0, el sistema tiene infinitas soluciones."
+            }
+        ]
+    },
+    {
+        "id": "adv-alg-03",
+        "nombre": "Inecuaciones",
+        "nivel": "2do BGU",
+        "categoria": "Álgebra",
+        "preguntas": [
+            {
+                "pregunta": "Resuelve la inecuación: 3x - 5 > 7",
+                "opciones": ["x > 4", "x < 4", "x > 2", "x ≥ 4"],
+                "respuesta": 0,
+                "explicacion": "3x > 12 ⇒ x > 4."
+            },
+            {
+                "pregunta": "¿Qué ocurre con el sentido de una desigualdad al multiplicar o dividir por un número negativo?",
+                "opciones": ["Se mantiene igual", "Se invierte", "Se anula la desigualdad", "Solo cambia si es mayor o igual"],
+                "respuesta": 1,
+                "explicacion": "Al multiplicar o dividir ambos miembros de una desigualdad por un número negativo, el sentido de la desigualdad cambia."
+            }
+        ]
+    },
+    {
+        "id": "adv-alg-04",
+        "nombre": "Polinomios",
+        "nivel": "2do BGU",
+        "categoria": "Álgebra",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es el grado del polinomio P(x) = 4x⁵ - 2x³ + 7x - 1?",
+                "opciones": ["3", "4", "5", "7"],
+                "respuesta": 2,
+                "explicacion": "El grado de un polinomio es el mayor exponente de la variable, en este caso 5."
+            },
+            {
+                "pregunta": "Según el Teorema del Resto, el resto de dividir P(x) entre (x - a) es igual a:",
+                "opciones": ["P(0)", "P(a)", "P(-a)", "P'(a)"],
+                "respuesta": 1,
+                "explicacion": "El teorema del resto establece que el residuo de P(x) ÷ (x - a) es numéricamente igual al valor numérico P(a)."
+            }
+        ]
+    },
+    {
+        "id": "adv-alg-05",
+        "nombre": "Factorización",
+        "nivel": "2do BGU",
+        "categoria": "Álgebra",
+        "preguntas": [
+            {
+                "pregunta": "Factoriza la suma de cubos: a³ + b³",
+                "opciones": ["(a + b)(a² - ab + b²)", "(a + b)(a² + ab + b²)", "(a - b)(a² + ab + b²)", "(a + b)³"],
+                "respuesta": 0,
+                "explicacion": "La factorización clásica de la suma de cubos es (a + b)(a² - ab + b²)."
+            },
+            {
+                "pregunta": "Factoriza el trinomio de la forma ax² + bx + c: 2x² + 7x + 3",
+                "opciones": ["(2x + 1)(x + 3)", "(2x + 3)(x + 1)", "(x + 7)(2x + 1)", "(2x - 1)(x - 3)"],
+                "respuesta": 0,
+                "explicacion": "(2x + 1)(x + 3) = 2x² + 6x + x + 3 = 2x² + 7x + 3."
+            }
+        ]
+    },
+    {
+        "id": "adv-alg-06",
+        "nombre": "Expresiones algebraicas",
+        "nivel": "2do BGU",
+        "categoria": "Álgebra",
+        "preguntas": [
+            {
+                "pregunta": "Simplifica: (x² - 9) / (x - 3)",
+                "opciones": ["x - 3", "x + 3", "x + 9", "1"],
+                "respuesta": 1,
+                "explicacion": "Factorizando el numerador como diferencia de cuadrados (x-3)(x+3)/(x-3) = x + 3 (para x ≠ 3)."
+            }
+        ]
+    },
+    {
+        "id": "adv-func-01",
+        "nombre": "Funciones cuadráticas",
+        "nivel": "2do BGU",
+        "categoria": "Funciones",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es la coordenada X del vértice de la parábola f(x) = ax² + bx + c?",
+                "opciones": ["-b / (2a)", "b / (2a)", "-c / a", "b² - 4ac"],
+                "respuesta": 0,
+                "explicacion": "La abscisa del vértice es x = -b / (2a)."
+            },
+            {
+                "pregunta": "Si a > 0 en f(x) = ax² + bx + c, la parábola abre hacia:",
+                "opciones": ["Abajo y tiene un máximo", "Arriba y tiene un mínimo", "La derecha", "La izquierda"],
+                "respuesta": 1,
+                "explicacion": "Cuando el coeficiente cuadrático es positivo, la concavidad es hacia arriba y el vértice es un punto mínimo."
+            }
+        ]
+    },
+    {
+        "id": "adv-func-02",
+        "nombre": "Funciones exponenciales",
+        "nivel": "2do BGU",
+        "categoria": "Funciones",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es el dominio de la función f(x) = 2ˣ?",
+                "opciones": ["(0, +∞)", "[-1, 1]", "Todos los números reales (-∞, +∞)", "[0, +∞)"],
+                "respuesta": 2,
+                "explicacion": "La función exponencial está definida para cualquier exponente real x ∈ ℝ."
+            },
+            {
+                "pregunta": "La gráfica de f(x) = aˣ con a > 1 es:",
+                "opciones": ["Estrictamente decreciente", "Estrictamente creciente", "Constante", "Una línea recta"],
+                "respuesta": 1,
+                "explicacion": "Para base a > 1, al crecer x el valor de aˣ se incrementa rápidamente, siendo estrictamente creciente."
+            }
+        ]
+    },
+    {
+        "id": "adv-func-03",
+        "nombre": "Funciones logarítmicas",
+        "nivel": "2do BGU",
+        "categoria": "Funciones",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es el valor de log₂(32)?",
+                "opciones": ["3", "4", "5", "6"],
+                "respuesta": 2,
+                "explicacion": "2⁵ = 32, por tanto log₂(32) = 5."
+            },
+            {
+                "pregunta": "¿Cuál es el dominio de la función f(x) = ln(x - 2)?",
+                "opciones": ["x ≥ 2", "x > 2", "x > 0", "x ∈ ℝ"],
+                "respuesta": 1,
+                "explicacion": "El argumento de un logaritmo debe ser estrictamente positivo: x - 2 > 0 ⇒ x > 2."
+            }
+        ]
+    },
+    {
+        "id": "adv-func-04",
+        "nombre": "Composición de funciones",
+        "nivel": "2do BGU",
+        "categoria": "Funciones",
+        "preguntas": [
+            {
+                "pregunta": "Si f(x) = 2x + 3 y g(x) = x², calcula (f ∘ g)(2) = f(g(2))",
+                "opciones": ["11", "14", "19", "7"],
+                "respuesta": 0,
+                "explicacion": "g(2) = 2² = 4. Luego f(4) = 2(4) + 3 = 11."
+            }
+        ]
+    },
+    {
+        "id": "adv-func-05",
+        "nombre": "Funciones inversas",
+        "nivel": "2do BGU",
+        "categoria": "Funciones",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es la función inversa de f(x) = 3x - 6?",
+                "opciones": ["f⁻¹(x) = (x + 6) / 3", "f⁻¹(x) = 3x + 6", "f⁻¹(x) = (x - 6) / 3", "f⁻¹(x) = 6 - 3x"],
+                "respuesta": 0,
+                "explicacion": "y = 3x - 6 ⇒ y + 6 = 3x ⇒ x = (y + 6)/3 ⇒ f⁻¹(x) = (x + 6)/3."
+            }
+        ]
+    },
+    {
+        "id": "adv-func-06",
+        "nombre": "Transformaciones de funciones",
+        "nivel": "2do BGU",
+        "categoria": "Funciones",
+        "preguntas": [
+            {
+                "pregunta": "La gráfica de g(x) = f(x - 3) representa respecto a f(x):",
+                "opciones": ["Un desplazamiento de 3 unidades hacia la izquierda", "Un desplazamiento de 3 unidades hacia la derecha", "Un desplazamiento vertical hacia abajo", "Una reflexión sobre el eje Y"],
+                "respuesta": 1,
+                "explicacion": "f(x - h) con h > 0 traslada horizontalmente la gráfica h unidades hacia la derecha."
+            }
+        ]
+    },
+    {
+        "id": "adv-trig-01",
+        "nombre": "Razones trigonométricas",
+        "nivel": "2do BGU",
+        "categoria": "Trigonometría",
+        "preguntas": [
+            {
+                "pregunta": "En un triángulo rectángulo, sen(θ) se define como:",
+                "opciones": ["Cateto Adyacente / Hipotenusa", "Cateto Opuesto / Hipotenusa", "Cateto Opuesto / Cateto Adyacente", "Hipotenusa / Cateto Opuesto"],
+                "respuesta": 1,
+                "explicacion": "Por definición trigonométrica básica, el seno es cateto opuesto sobre hipotenusa."
+            },
+            {
+                "pregunta": "¿Cuál es el valor exacto de cos(60°)?",
+                "opciones": ["1/2", "√3/2", "√2/2", "1"],
+                "respuesta": 0,
+                "explicacion": "cos(60°) = cos(π/3) = 1/2."
+            }
+        ]
+    },
+    {
+        "id": "adv-trig-02",
+        "nombre": "Identidades trigonométricas",
+        "nivel": "2do BGU",
+        "categoria": "Trigonometría",
+        "preguntas": [
+            {
+                "pregunta": "¿A qué es igual sen²(x) + cos²(x)?",
+                "opciones": ["0", "1", "tan²(x)", "sec²(x)"],
+                "respuesta": 1,
+                "explicacion": "Es la identidad pitagórica fundamental sen²(x) + cos²(x) = 1."
+            },
+            {
+                "pregunta": "¿Cuál es la expresión equivalente para 1 + tan²(x)?",
+                "opciones": ["cot²(x)", "sec²(x)", "csc²(x)", "cos²(x)"],
+                "respuesta": 1,
+                "explicacion": "Dividiendo la identidad pitagórica por cos²(x), se obtiene 1 + tan²(x) = sec²(x)."
+            }
+        ]
+    },
+    {
+        "id": "adv-trig-03",
+        "nombre": "Ecuaciones trigonométricas",
+        "nivel": "2do BGU",
+        "categoria": "Trigonometría",
+        "preguntas": [
+            {
+                "pregunta": "Resuelve sen(x) = 1 en el intervalo [0, 2π):",
+                "opciones": ["x = 0", "x = π/2", "x = π", "x = 3π/2"],
+                "respuesta": 1,
+                "explicacion": "En el círculo unitario, la ordenada alcanza el valor 1 en el ángulo de 90° (π/2 radianes)."
+            }
+        ]
+    },
+    {
+        "id": "adv-trig-04",
+        "nombre": "Gráficas de funciones trigonométricas",
+        "nivel": "2do BGU",
+        "categoria": "Trigonometría",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es el período fundamental de la función f(x) = sen(x)?",
+                "opciones": ["π", "2π", "π/2", "4π"],
+                "respuesta": 1,
+                "explicacion": "Las funciones seno y coseno completan un ciclo de onda cada 2π radianes (360°)."
+            }
+        ]
+    },
+    {
+        "id": "adv-trig-05",
+        "nombre": "Aplicaciones de trigonometría",
+        "nivel": "2do BGU",
+        "categoria": "Trigonometría",
+        "preguntas": [
+            {
+                "pregunta": "Para resolver un triángulo no rectángulo conociendo dos lados y el ángulo comprendido entre ellos, se emplea:",
+                "opciones": ["Ley de Senos", "Ley de Cosenos", "Teorema de Pitágoras directo", "Solo razones básicas"],
+                "respuesta": 1,
+                "explicacion": "La Ley de Cosenos c² = a² + b² - 2ab cos(C) es la indicada para la configuración LAL (Lado-Ángulo-Lado)."
+            }
+        ]
+    },
+    {
+        "id": "adv-geom-01",
+        "nombre": "Rectas",
+        "nivel": "2do BGU",
+        "categoria": "Geometría analítica",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es la ecuación punto-pendiente de una recta con pendiente m que pasa por (x₁, y₁)?",
+                "opciones": ["y - y₁ = m(x - x₁)", "y + y₁ = m(x + x₁)", "y = mx₁ + y₁", "x - x₁ = m(y - y₁)"],
+                "respuesta": 0,
+                "explicacion": "La fórmula punto-pendiente es y - y₁ = m(x - x₁)."
+            },
+            {
+                "pregunta": "Dos rectas son perpendiculares si el producto de sus pendientes m₁ · m₂ es igual a:",
+                "opciones": ["1", "0", "-1", "Infinita"],
+                "respuesta": 2,
+                "explicacion": "Para perpendicularidad, m₂ = -1/m₁ ⇒ m₁ · m₂ = -1."
+            }
+        ]
+    },
+    {
+        "id": "adv-geom-02",
+        "nombre": "Circunferencia",
+        "nivel": "2do BGU",
+        "categoria": "Geometría analítica",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es la ecuación ordinaria de una circunferencia con centro en (h, k) y radio r?",
+                "opciones": ["(x - h)² + (y - k)² = r²", "(x + h)² + (y + k)² = r", "(x - h)² - (y - k)² = r²", "x² + y² = r"],
+                "respuesta": 0,
+                "explicacion": "Por definición de lugar geométrico a distancia r del centro (h,k), (x - h)² + (y - k)² = r²."
+            }
+        ]
+    },
+    {
+        "id": "adv-geom-03",
+        "nombre": "Parábola",
+        "nivel": "2do BGU",
+        "categoria": "Geometría analítica",
+        "preguntas": [
+            {
+                "pregunta": "La distancia del vértice al foco de una parábola se denota comúnmente con la letra:",
+                "opciones": ["r", "p", "d", "c"],
+                "respuesta": 1,
+                "explicacion": "El parámetro p representa la distancia focal desde el vértice al foco (o a la directriz)."
+            }
+        ]
+    },
+    {
+        "id": "adv-geom-04",
+        "nombre": "Distancia entre puntos",
+        "nivel": "2do BGU",
+        "categoria": "Geometría analítica",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es la distancia entre los puntos A(1, 2) y B(4, 6)?",
+                "opciones": ["3", "4", "5", "7"],
+                "respuesta": 2,
+                "explicacion": "d = √[(4-1)² + (6-2)²] = √[3² + 4²] = √[9 + 16] = √25 = 5."
+            }
+        ]
+    },
+    {
+        "id": "adv-geom-05",
+        "nombre": "Pendiente",
+        "nivel": "2do BGU",
+        "categoria": "Geometría analítica",
+        "preguntas": [
+            {
+                "pregunta": "Calcula la pendiente de la recta que pasa por (2, 3) y (6, 11):",
+                "opciones": ["1", "2", "3", "4"],
+                "respuesta": 1,
+                "explicacion": "m = (11 - 3) / (6 - 2) = 8 / 4 = 2."
+            }
+        ]
+    },
+    {
+        "id": "adv-geom-06",
+        "nombre": "Intersección de rectas",
+        "nivel": "2do BGU",
+        "categoria": "Geometría analítica",
+        "preguntas": [
+            {
+                "pregunta": "¿En qué punto se intersecan las rectas y = 2x + 1 e y = -x + 4?",
+                "opciones": ["(1, 3)", "(2, 5)", "(0, 1)", "(3, 1)"],
+                "respuesta": 0,
+                "explicacion": "2x + 1 = -x + 4 ⇒ 3x = 3 ⇒ x = 1. Luego y = 2(1) + 1 = 3."
+            }
+        ]
+    },
+    {
+        "id": "adv-suc-01",
+        "nombre": "Sucesiones aritméticas",
+        "nivel": "2do BGU",
+        "categoria": "Sucesiones",
+        "preguntas": [
+            {
+                "pregunta": "En una sucesión aritmética con a₁ = 3 y diferencia d = 4, ¿cuál es el 10.º término?",
+                "opciones": ["36", "39", "40", "43"],
+                "respuesta": 1,
+                "explicacion": "aₙ = a₁ + (n - 1)d ⇒ a₁₀ = 3 + (9)(4) = 3 + 36 = 39."
+            }
+        ]
+    },
+    {
+        "id": "adv-suc-02",
+        "nombre": "Sucesiones geométricas",
+        "nivel": "2do BGU",
+        "categoria": "Sucesiones",
+        "preguntas": [
+            {
+                "pregunta": "En una sucesión geométrica con primer término a₁ = 2 y razón r = 3, calcula el 4.º término:",
+                "opciones": ["18", "24", "54", "162"],
+                "respuesta": 2,
+                "explicacion": "a₄ = a₁ · r³ = 2 · (3³) = 2 · 27 = 54."
+            }
+        ]
+    },
+    {
+        "id": "adv-suc-03",
+        "nombre": "Series",
+        "nivel": "2do BGU",
+        "categoria": "Sucesiones",
+        "preguntas": [
+            {
+                "pregunta": "¿Qué representa una serie matemática?",
+                "opciones": ["La suma de los términos de una sucesión", "La resta del primer y último término", "El producto de factores primos", "Una gráfica en dos dimensiones"],
+                "respuesta": 0,
+                "explicacion": "Formalmente, una serie es la suma indicada de los términos de una sucesión."
+            }
+        ]
+    },
+    {
+        "id": "adv-suc-04",
+        "nombre": "Sumas de sucesiones",
+        "nivel": "2do BGU",
+        "categoria": "Sucesiones",
+        "preguntas": [
+            {
+                "pregunta": "Calcula la suma de los primeros 10 números naturales (1 + 2 + ... + 10):",
+                "opciones": ["45", "50", "55", "60"],
+                "respuesta": 2,
+                "explicacion": "S = n(n + 1)/2 = 10(11)/2 = 110/2 = 55."
+            }
+        ]
+    },
+    {
+        "id": "adv-prob-01",
+        "nombre": "Probabilidad",
+        "nivel": "2do BGU",
+        "categoria": "Probabilidad y estadística",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es la probabilidad de obtener un número par al lanzar un dado regular de 6 caras?",
+                "opciones": ["1/6", "1/3", "1/2", "2/3"],
+                "respuesta": 2,
+                "explicacion": "Casos favorables: {2, 4, 6} (3 casos). Casos posibles: 6. P = 3/6 = 1/2."
+            }
+        ]
+    },
+    {
+        "id": "adv-prob-02",
+        "nombre": "Probabilidad condicional",
+        "nivel": "2do BGU",
+        "categoria": "Probabilidad y estadística",
+        "preguntas": [
+            {
+                "pregunta": "La fórmula de probabilidad condicional P(A|B) está dada por:",
+                "opciones": ["P(A ∩ B) / P(B)", "P(A ∪ B) / P(A)", "P(A) · P(B)", "P(B) / P(A)"],
+                "respuesta": 0,
+                "explicacion": "P(A|B) = P(A ∩ B) / P(B), con P(B) > 0."
+            }
+        ]
+    },
+    {
+        "id": "adv-prob-03",
+        "nombre": "Combinatoria",
+        "nivel": "2do BGU",
+        "categoria": "Probabilidad y estadística",
+        "preguntas": [
+            {
+                "pregunta": "¿De cuántas formas se pueden ordenar 4 libros diferentes en una repisa?",
+                "opciones": ["12", "16", "24", "48"],
+                "respuesta": 2,
+                "explicacion": "Es una permutación de 4 elementos: 4! = 4 × 3 × 2 × 1 = 24."
+            }
+        ]
+    },
+    {
+        "id": "adv-prob-04",
+        "nombre": "Distribuciones",
+        "nivel": "2do BGU",
+        "categoria": "Probabilidad y estadística",
+        "preguntas": [
+            {
+                "pregunta": "La distribución continua de probabilidad con forma de campana simétrica se conoce como:",
+                "opciones": ["Distribución Uniforme", "Distribución Binomial", "Distribución Normal o Gaussiana", "Distribución de Poisson"],
+                "respuesta": 2,
+                "explicacion": "La distribución normal o campana de Gauss es simétrica alrededor de su media."
+            }
+        ]
+    },
+    {
+        "id": "adv-prob-05",
+        "nombre": "Media, mediana y desviación estándar",
+        "nivel": "2do BGU",
+        "categoria": "Probabilidad y estadística",
+        "preguntas": [
+            {
+                "pregunta": "¿Qué mide la desviación estándar en un conjunto de datos?",
+                "opciones": ["El valor central", "La dispersión de los datos respecto a la media", "La moda del conjunto", "El valor máximo alcanzado"],
+                "respuesta": 1,
+                "explicacion": "La desviación estándar cuantifica el grado de variabilidad o dispersión respecto al promedio."
+            },
+            {
+                "pregunta": "Calcula la mediana del conjunto de datos: 3, 5, 7, 9, 11",
+                "opciones": ["5", "7", "9", "35"],
+                "respuesta": 1,
+                "explicacion": "Al estar ordenados con número impar de elementos (5), la mediana es el dato central: 7."
+            }
+        ]
+    },
+    {
+        "id": "adv-calc-01",
+        "nombre": "Concepto de límite",
+        "nivel": "2do BGU",
+        "categoria": "Cálculo introductorio",
+        "preguntas": [
+            {
+                "pregunta": "Calcula el límite: lim(x→2) [ (x² - 4) / (x - 2) ]",
+                "opciones": ["0", "2", "4", "Indefinido"],
+                "respuesta": 2,
+                "explicacion": "Factorizando (x - 2)(x + 2)/(x - 2) = x + 2. Evaluando en x = 2: 2 + 2 = 4."
+            }
+        ]
+    },
+    {
+        "id": "adv-calc-02",
+        "nombre": "Continuidad",
+        "nivel": "2do BGU",
+        "categoria": "Cálculo introductorio",
+        "preguntas": [
+            {
+                "pregunta": "Para que una función sea continua en x = c, se debe cumplir que:",
+                "opciones": ["f(c) exista, el límite lim(x→c) f(x) exista y ambos sean iguales", "Solo que f(c) > 0", "Que su derivada sea cero", "Que sea periódica"],
+                "respuesta": 0,
+                "explicacion": "Las tres condiciones de continuidad son: existe f(c), existe lim(x→c) f(x), y lim(x→c) f(x) = f(c)."
+            }
+        ]
+    },
+    {
+        "id": "adv-calc-03",
+        "nombre": "Introducción a derivadas",
+        "nivel": "2do BGU",
+        "categoria": "Cálculo introductorio",
+        "preguntas": [
+            {
+                "pregunta": "Geométricamente, la derivada f'(a) representa:",
+                "opciones": ["El área bajo la curva", "La pendiente de la recta tangente a la curva en x = a", "La longitud de la curva", "El valor máximo de la función"],
+                "respuesta": 1,
+                "explicacion": "La derivada en un punto es el valor de la pendiente de la recta tangente a la función en ese punto."
+            }
+        ]
+    },
+    {
+        "id": "adv-calc-04",
+        "nombre": "Reglas básicas de derivación",
+        "nivel": "2do BGU",
+        "categoria": "Cálculo introductorio",
+        "preguntas": [
+            {
+                "pregunta": "¿Cuál es la derivada de f(x) = 5x³ - 4x + 7?",
+                "opciones": ["15x² - 4", "15x² - 4x", "5x² - 4", "15x³ - 4"],
+                "respuesta": 0,
+                "explicacion": "Por la regla de la potencia: d/dx(5x³) = 15x², d/dx(-4x) = -4, d/dx(7) = 0 ⇒ 15x² - 4."
+            },
+            {
+                "pregunta": "¿Cuál es la derivada de una constante c (d/dx [c])?",
+                "opciones": ["1", "c", "0", "c²"],
+                "respuesta": 2,
+                "explicacion": "Una función constante no cambia su tasa de variación; su derivada es 0."
+            }
+        ]
+    },
+    {
+        "id": "adv-calc-05",
+        "nombre": "Aplicaciones sencillas de derivadas",
+        "nivel": "2do BGU",
+        "categoria": "Cálculo introductorio",
+        "preguntas": [
+            {
+                "pregunta": "Si la posición de un móvil está dada por s(t) = 3t² + 2t, su velocidad instantánea v(t) = s'(t) es:",
+                "opciones": ["6t + 2", "3t + 2", "6t²", "6t"],
+                "respuesta": 0,
+                "explicacion": "La velocidad es la primera derivada de la posición: s'(t) = 6t + 2."
+            },
+            {
+                "pregunta": "En los puntos críticos de una función derivable donde hay máximos o mínimos locales, la primera derivada es:",
+                "opciones": ["Positiva", "Negativa", "Cero (o no existe)", "Infinita"],
+                "respuesta": 2,
+                "explicacion": "El criterio de la primera derivada establece que f'(x) = 0 en los puntos estacionarios o tangentes horizontales."
+            }
+        ]
+    }
+]

@@ -10,9 +10,13 @@ app = Flask(__name__)
 app.secret_key = 'eduadapt_secret_2026'
 
 db = Database()
-# Usar ruta absoluta para leer el archivo en Vercel
-json_path = os.path.join(os.path.dirname(__file__), 'preguntas.json')
-quiz = Quiz(json_path)
+quiz = Quiz()
+
+@app.before_request
+def track_user_activity():
+    """Registra la actividad continua del usuario para el estado 'En línea'."""
+    if 'usuario_id' in session:
+        db.update_activity(session['usuario_id'])
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -59,16 +63,12 @@ def register():
             flash("Por favor completa los campos obligatorios.")
             return redirect(url_for('register'))
             
-        if rol == 'ESTUDIANTE' and not curso:
-            flash("Los estudiantes deben especificar un curso.")
-            return redirect(url_for('register'))
-            
         success, msg = db.register_user(nombre, curso, username, password, rol)
         if success:
             if rol == 'ESTUDIANTE':
-                flash("Registro exitoso. Debes esperar a que un administrador apruebe tu cuenta.")
+                flash("Registro completado. Tu cuenta debe ser aprobada por un profesor o administrador antes de acceder.")
             else:
-                flash("Registro exitoso. Ya puedes iniciar sesión.")
+                flash("Registro exitoso. Ahora puedes iniciar sesión.")
             return redirect(url_for('index'))
         else:
             flash(msg)
@@ -78,16 +78,17 @@ def register():
 
 @app.route('/admin')
 def admin_dashboard():
-    if session.get('rol') != 'ADMIN':
+    if session.get('rol') not in ['ADMIN', 'PROFESOR']:
         return redirect(url_for('index'))
-    pendientes = db.get_pending_students()
-    return render_template('admin.html', pendientes=pendientes)
+    pending_students = db.get_pending_students()
+    return render_template('admin.html', students=pending_students)
 
-@app.route('/approve/<int:user_id>', methods=['POST'])
-def approve(user_id):
-    if session.get('rol') != 'ADMIN':
-        return jsonify({"error": "No autorizado"}), 403
+@app.route('/approve/<int:user_id>')
+def approve_student(user_id):
+    if session.get('rol') not in ['ADMIN', 'PROFESOR']:
+        return redirect(url_for('index'))
     db.approve_student(user_id)
+    flash("Estudiante aprobado exitosamente.")
     return redirect(url_for('admin_dashboard'))
 
 @app.route('/menu')
@@ -173,18 +174,17 @@ def finalizar_diagnostico():
     
     porcentaje, rendimiento_tema, prioridades = ResultsAnalyzer.analizar_rendimiento(respuestas)
     
-    db.save_result(session['usuario_id'], materia, porcentaje, rendimiento_tema)
+    # Guarda el resultado y además desglosa cada respuesta en respuestas_detalle
+    db.save_result(session['usuario_id'], materia, porcentaje, rendimiento_tema, respuestas_detalle=respuestas)
     
     correctas = sum(1 for r in respuestas if r[1])
     incorrectas = len(respuestas) - correctas
     
     session['prioridades_actuales'] = prioridades
     
-    # Obtener preguntas de refuerzo para los temas que necesitan refuerzo
     preguntas_refuerzo = []
     for tema, rend, clasif in prioridades:
         if clasif == "NECESITA REFUERZO":
-            # Obtener 1 o 2 preguntas de ese tema para repasar
             preguntas_tema = quiz.get_preguntas(materia, tema, cantidad=2)
             preguntas_refuerzo.extend(preguntas_tema)
     
@@ -203,17 +203,25 @@ def plan():
     prioridades = session['prioridades_actuales']
     return render_template('plan.html', prioridades=prioridades, materia=session.get('materia_actual'))
 
+# --- MODO DE PRÁCTICA Y TEMAS AVANZADOS DE 2.º BGU ---
 @app.route('/practica')
 def practica():
     if 'usuario_id' not in session:
         return redirect(url_for('index'))
     materias = quiz.get_materias()
-    return render_template('practica.html', materias=materias)
+    categorias_avanzadas = quiz.get_categorias_avanzadas()
+    return render_template('practica.html', materias=materias, categorias_avanzadas=categorias_avanzadas)
 
 @app.route('/api/temas/<materia>')
 def get_temas(materia):
     materia_canon = quiz.get_canonical_materia(materia)
     temas = quiz.get_temas(materia_canon)
+    return jsonify(temas)
+
+@app.route('/api/temas_avanzados/<categoria>')
+def get_temas_avanzados(categoria):
+    categoria_clean = urllib.parse.unquote(categoria)
+    temas = quiz.get_temas_por_categoria(categoria_clean)
     return jsonify(temas)
 
 @app.route('/api/practicar/<materia>/<tema>')
@@ -223,34 +231,129 @@ def api_practicar(materia, tema):
     preguntas = quiz.get_preguntas(materia_canon, tema_clean, cantidad=5)
     return jsonify(preguntas)
 
+@app.route('/api/guardar_practica', methods=['POST'])
+def api_guardar_practica():
+    """Guarda las respuestas de práctica y actualiza el progreso en tiempo real."""
+    if 'usuario_id' not in session:
+        return jsonify({"status": "error", "message": "No autenticado"}), 401
+        
+    data = request.get_json() or {}
+    materia = data.get('materia', 'Práctica')
+    tema = data.get('tema', 'General')
+    respuestas = data.get('respuestas', [])
+    
+    if not respuestas:
+        return jsonify({"status": "error", "message": "Sin respuestas"}), 400
+        
+    db.record_practice_session(session['usuario_id'], materia, tema, respuestas)
+    return jsonify({"status": "ok", "message": "Sesión de práctica registrada correctamente."})
+
+# --- MÓDULO DE MATERIALES EDUCATIVOS ---
+@app.route('/materiales')
+def materiales():
+    if 'usuario_id' not in session:
+        return redirect(url_for('index'))
+        
+    materia_req = request.args.get('materia')
+    tema_req = request.args.get('tema')
+    
+    materias = quiz.get_materiales_materias()
+    material_actual = None
+    
+    if materia_req and tema_req:
+        material_actual = quiz.get_material(materia_req, tema_req)
+    elif materias:
+        # Material por defecto (el primero)
+        primer_mat = materias[0]
+        temas_prim = quiz.get_materiales_temas(primer_mat)
+        if temas_prim:
+            material_actual = quiz.get_material(primer_mat, temas_prim[0])
+            materia_req = primer_mat
+            tema_req = temas_prim[0]
+            
+    return render_template('materiales.html', 
+                           materias=materias, 
+                           material_actual=material_actual, 
+                           materia_req=materia_req, 
+                           tema_req=tema_req)
+
+@app.route('/api/materiales/temas')
+def api_materiales_temas():
+    materia = request.args.get('materia', '')
+    materia_clean = urllib.parse.unquote(materia)
+    temas = quiz.get_materiales_temas(materia_clean)
+    return jsonify(temas)
+
+@app.route('/api/materiales/detalle')
+def api_materiales_detalle():
+    materia = request.args.get('materia', '')
+    tema = request.args.get('tema', '')
+    materia_clean = urllib.parse.unquote(materia)
+    tema_clean = urllib.parse.unquote(tema)
+    mat = quiz.get_material(materia_clean, tema_clean)
+    if mat:
+        return jsonify(mat)
+    return jsonify({"error": "Material no encontrado"}), 404
+
+# --- MI PROGRESO (SINCRONIZADO CON VISTA DEL PROFESOR) ---
 @app.route('/progreso')
 def progreso():
     if 'usuario_id' not in session:
         return redirect(url_for('index'))
         
-    resultados = db.get_last_results(session['usuario_id'])
-    
-    grafico_data = None
-    if resultados:
-        ultimo = resultados[0]
-        temas_dict = json.loads(ultimo[3])
-        grafico_data = {
-            "materia": ultimo[0],
-            "fecha": ultimo[1][:10],
-            "labels": list(temas_dict.keys()),
-            "data": list(temas_dict.values())
-        }
-        
-    return render_template('progreso.html', resultados=resultados, grafico=grafico_data)
+    progreso_data = db.get_student_full_progress(session['usuario_id'])
+    return render_template('progreso.html', progreso=progreso_data)
 
+@app.route('/api/tarea/entregar', methods=['POST'])
+def api_tarea_entregar():
+    """Permite al estudiante enviar la respuesta de una tarea."""
+    if 'usuario_id' not in session:
+        return redirect(url_for('index'))
+        
+    tarea_id = request.form.get('tarea_id')
+    respuesta = request.form.get('respuesta', '')
+    if tarea_id:
+        db.submit_tarea(int(tarea_id), session['usuario_id'], respuesta)
+        flash("Tarea enviada con éxito al profesor.")
+    return redirect(url_for('progreso'))
+
+# --- MÓDULO DEL PROFESOR ---
 @app.route('/profesor')
 def profesor():
     if session.get('rol') not in ['PROFESOR', 'ADMIN']:
         return redirect(url_for('index'))
-    # Obtener los datos de todos los estudiantes
-    resultados = db.get_all_student_results()
-    stats = db.get_general_statistics()
-    return render_template('profesor.html', resultados=resultados, stats=stats)
+        
+    stats = db.get_teacher_global_stats()
+    estudiantes = db.get_all_students_summary()
+    return render_template('profesor.html', stats=stats, estudiantes=estudiantes)
+
+@app.route('/profesor/estudiante/<int:estudiante_id>')
+def profesor_estudiante(estudiante_id):
+    if session.get('rol') not in ['PROFESOR', 'ADMIN']:
+        return redirect(url_for('index'))
+        
+    progreso_data = db.get_student_full_progress(estudiante_id)
+    if not progreso_data:
+        flash("Estudiante no encontrado.")
+        return redirect(url_for('profesor'))
+        
+    return render_template('profesor_estudiante.html', progreso=progreso_data)
+
+@app.route('/profesor/tarea/calificar', methods=['POST'])
+def profesor_tarea_calificar():
+    if session.get('rol') not in ['PROFESOR', 'ADMIN']:
+        return redirect(url_for('index'))
+        
+    entrega_id = request.form.get('entrega_id')
+    estudiante_id = request.form.get('estudiante_id')
+    calificacion = request.form.get('calificacion', 10.0)
+    estado = request.form.get('estado', 'RESUELTA_CORRECTA')
+    
+    if entrega_id:
+        db.grade_tarea(int(entrega_id), estado, float(calificacion))
+        flash("Tarea calificada correctamente.")
+        
+    return redirect(url_for('profesor_estudiante', estudiante_id=estudiante_id))
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
