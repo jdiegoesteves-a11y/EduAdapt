@@ -4,6 +4,7 @@ from quiz import Quiz
 from analyzer import ResultsAnalyzer
 import os
 import json
+import urllib.parse
 
 app = Flask(__name__)
 app.secret_key = 'eduadapt_secret_2026'
@@ -112,12 +113,13 @@ def iniciar_diagnostico(materia):
     if 'usuario_id' not in session:
         return redirect(url_for('index'))
     
-    preguntas = quiz.get_preguntas(materia, cantidad=10)
+    materia_canon = quiz.get_canonical_materia(materia)
+    preguntas = quiz.get_preguntas(materia_canon, cantidad=10)
     if not preguntas:
-        flash(f"No hay preguntas suficientes para {materia}.")
+        flash(f"No hay preguntas suficientes para {materia_canon}.")
         return redirect(url_for('seleccion'))
         
-    session['materia_actual'] = materia
+    session['materia_actual'] = materia_canon
     session['preguntas_actuales'] = preguntas
     session['indice_pregunta'] = 0
     session['respuestas_estudiante'] = []
@@ -210,12 +212,15 @@ def practica():
 
 @app.route('/api/temas/<materia>')
 def get_temas(materia):
-    temas = quiz.get_temas(materia)
+    materia_canon = quiz.get_canonical_materia(materia)
+    temas = quiz.get_temas(materia_canon)
     return jsonify(temas)
 
 @app.route('/api/practicar/<materia>/<tema>')
 def api_practicar(materia, tema):
-    preguntas = quiz.get_preguntas(materia, tema, cantidad=5)
+    materia_canon = quiz.get_canonical_materia(materia)
+    tema_clean = urllib.parse.unquote(tema)
+    preguntas = quiz.get_preguntas(materia_canon, tema_clean, cantidad=5)
     return jsonify(preguntas)
 
 @app.route('/progreso')
